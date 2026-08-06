@@ -36,8 +36,10 @@ export function SharedCompetenciesScreen() {
             margin: 0,
           }}
         >
-          These three competencies are expected of every designer at every level,
-          regardless of discipline.
+          Seven competencies expected of every designer at every level, regardless of
+          discipline. They are ordered by how strongly our people leaders weight them
+          when assessing early-career designers — that weighting shifts as you move up
+          the ladder.
         </p>
       </div>
 

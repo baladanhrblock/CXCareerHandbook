@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Fragment } from "react";
 import type { MatrixRow, Level } from "../data/sharedCompetencies";
 import { LEVELS } from "../data/sharedCompetencies";
 
@@ -7,6 +7,7 @@ import { LEVELS } from "../data/sharedCompetencies";
 interface PanelData {
   rowLabel: string;
   rowTag: string;
+  rowDefinition?: string;
   levelLabel: string;
   text: string;
   bullets?: string[];
@@ -161,6 +162,22 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
         </div>
 
         <div style={{ padding: "24px", flex: 1, overflowY: "auto" }}>
+          {data.rowDefinition && (
+            <p
+              style={{
+                fontFamily: "var(--font-brand)",
+                fontSize: "13px",
+                fontWeight: 400,
+                color: "#6E6E6E",
+                lineHeight: 1.6,
+                margin: "0 0 16px",
+                paddingBottom: "16px",
+                borderBottom: "1px solid #E3E3E0",
+              }}
+            >
+              {data.rowDefinition}
+            </p>
+          )}
           <div
             style={{
               display: "inline-flex",
@@ -305,6 +322,81 @@ function RowTag({ label, type }: { label: string; type: "shared" | "unique" }) {
   );
 }
 
+// ─── Full-width section header row ────────────────────────────────────────────
+
+function SectionHeaderRow({
+  label,
+  collapsible,
+  collapsed,
+  onToggle,
+}: {
+  label: string;
+  collapsible?: boolean;
+  collapsed: boolean;
+  onToggle: () => void;
+}) {
+  const labelStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontFamily: "var(--font-brand)",
+    fontSize: "10px",
+    fontWeight: 700,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase",
+    color: "#FFFFFF",
+  };
+
+  return (
+    <tr>
+      <td
+        colSpan={LEVELS.length + 1}
+        style={{
+          padding: 0,
+          background: "#5C9770",
+          borderBottom: "1px solid #D4D4D3",
+        }}
+      >
+        {collapsible ? (
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={!collapsed}
+            style={{
+              ...labelStyle,
+              width: "100%",
+              padding: "8px 14px",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              textAlign: "left",
+              outline: "none",
+            }}
+            onFocus={(e) => { e.currentTarget.style.boxShadow = "inset 0 0 0 2px #00E95C"; }}
+            onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+          >
+            <span
+              aria-hidden="true"
+              style={{
+                display: "inline-block",
+                transform: collapsed ? "rotate(-90deg)" : "rotate(0deg)",
+                transition: "transform 0.15s",
+                fontSize: "9px",
+                lineHeight: 1,
+              }}
+            >
+              ▼
+            </span>
+            {label}
+          </button>
+        ) : (
+          <div style={{ ...labelStyle, padding: "8px 14px" }}>{label}</div>
+        )}
+      </td>
+    </tr>
+  );
+}
+
 // ─── Hatch overlay for aspirational cells ─────────────────────────────────────
 
 const HATCH_BG =
@@ -409,14 +501,30 @@ function MatrixCell({
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export interface CompetencyMatrixProps {
+export interface MatrixSection {
+  id: string;
+  /** Full-width header row label — rendered uppercase */
+  label: string;
+  /** Collapsible sections can be toggled; expanded by default */
+  collapsible?: boolean;
   rows: MatrixRow[];
+}
+
+export interface CompetencyMatrixProps {
+  /** Flat row list — used when the table has no section grouping */
+  rows?: MatrixRow[];
+  /** Grouped rows, each under a full-width header row. Takes precedence over `rows`. */
+  sections?: MatrixSection[];
   /** Highlight a specific level column with a "you are here" marker */
   highlightLevel?: Level;
 }
 
-export function CompetencyMatrix({ rows, highlightLevel }: CompetencyMatrixProps) {
+export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyMatrixProps) {
   const [panel, setPanel] = useState<PanelData | null>(null);
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+
+  const resolvedSections: MatrixSection[] =
+    sections ?? [{ id: "__all", label: "", rows: rows ?? [] }];
 
   function openPanel(row: MatrixRow, level: Level) {
     const levelMeta = LEVELS.find((l) => l.key === level)!;
@@ -424,6 +532,7 @@ export function CompetencyMatrix({ rows, highlightLevel }: CompetencyMatrixProps
     setPanel({
       rowLabel: row.label,
       rowTag: row.tag,
+      rowDefinition: row.definition,
       levelLabel: levelMeta.label,
       text: cell.text,
       bullets: cell.bullets,
@@ -534,40 +643,72 @@ export function CompetencyMatrix({ rows, highlightLevel }: CompetencyMatrixProps
           </thead>
 
           <tbody>
-            {rows.map((row) => (
-              <tr key={row.id}>
-                <td
-                  style={{
-                    padding: "12px 14px",
-                    verticalAlign: "top",
-                    borderRight: "1px solid #D4D4D3",
-                    borderBottom: "1px solid #D4D4D3",
-                    background: row.type === "shared" ? "#D6E5DB" : "#F1F5F7",
-                  }}
-                >
-                  <div
-                    style={{
-                      fontFamily: "var(--font-brand)",
-                      fontSize: "13px",
-                      fontWeight: 700,
-                      color: "#003512",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {row.label}
-                  </div>
-                  <RowTag label={row.tag} type={row.type} />
-                </td>
-                {LEVELS.map((l) => (
-                  <MatrixCell
-                    key={l.key}
-                    row={row}
-                    level={l.key}
-                    onClick={() => openPanel(row, l.key)}
-                  />
-                ))}
-              </tr>
-            ))}
+            {resolvedSections.map((section) => {
+              const isCollapsed = !!collapsed[section.id];
+              return (
+                <Fragment key={section.id}>
+                  {section.label && (
+                    <SectionHeaderRow
+                      label={section.label}
+                      collapsible={section.collapsible}
+                      collapsed={isCollapsed}
+                      onToggle={() =>
+                        setCollapsed((c) => ({ ...c, [section.id]: !c[section.id] }))
+                      }
+                    />
+                  )}
+                  {!isCollapsed &&
+                    section.rows.map((row) => (
+                      <tr key={row.id}>
+                        <td
+                          style={{
+                            padding: "12px 14px",
+                            verticalAlign: "top",
+                            borderRight: "1px solid #D4D4D3",
+                            borderBottom: "1px solid #D4D4D3",
+                            background: row.type === "shared" ? "#D6E5DB" : "#F1F5F7",
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontFamily: "var(--font-brand)",
+                              fontSize: "13px",
+                              fontWeight: 700,
+                              color: "#003512",
+                              lineHeight: 1.3,
+                            }}
+                          >
+                            {row.label}
+                          </div>
+                          {row.definition && (
+                            <div
+                              style={{
+                                fontFamily: "var(--font-brand)",
+                                fontSize: "11px",
+                                fontWeight: 400,
+                                color: "#6E6E6E",
+                                lineHeight: 1.45,
+                                marginTop: "4px",
+                              }}
+                            >
+                              {row.definition}
+                            </div>
+                          )}
+                          <RowTag label={row.tag} type={row.type} />
+                        </td>
+                        {LEVELS.map((l) => (
+                          <MatrixCell
+                            key={l.key}
+                            row={row}
+                            level={l.key}
+                            onClick={() => openPanel(row, l.key)}
+                          />
+                        ))}
+                      </tr>
+                    ))}
+                </Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>

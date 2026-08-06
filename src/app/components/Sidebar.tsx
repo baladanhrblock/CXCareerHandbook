@@ -5,6 +5,7 @@ export type RouteKey =
   | "welcome"
   | "shared-competencies"
   | "ux-design"
+  | "research"
   | "content-design"
   | "service-design"
   | "experience-strategy"
@@ -17,6 +18,7 @@ interface SidebarProps {
 
 const DISCIPLINES: { key: RouteKey; label: string }[] = [
   { key: "ux-design", label: "UX Design" },
+  { key: "research", label: "Research" },
   { key: "content-design", label: "Content Design" },
   { key: "service-design", label: "Service Design" },
   { key: "experience-strategy", label: "Experience Strategy" },

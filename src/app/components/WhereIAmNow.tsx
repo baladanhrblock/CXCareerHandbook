@@ -8,6 +8,7 @@ import type { RouteKey } from "./Sidebar";
 
 const DISCIPLINE_OPTIONS: { id: string; label: string; description: string }[] = [
   { id: "ux-design", label: "UX Design", description: "Interfaces & product experiences" },
+  { id: "research", label: "Research", description: "Evidence, methods & insight" },
   { id: "content-design", label: "Content Design", description: "Words, structure & voice" },
   { id: "service-design", label: "Service Design", description: "End-to-end services & systems" },
   { id: "experience-strategy", label: "Experience Strategy", description: "Vision, outcomes & portfolio" },
@@ -23,7 +24,8 @@ const NEXT_LEVEL: Partial<Record<Level, Level>> = {
 };
 
 const ADJACENT_DISCIPLINE: Record<string, string> = {
-  "ux-design": "service-design",
+  "ux-design": "research",
+  research: "service-design",
   "content-design": "ux-design",
   "service-design": "experience-strategy",
   "experience-strategy": "service-design",

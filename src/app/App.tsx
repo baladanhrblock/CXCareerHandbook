@@ -10,6 +10,7 @@ import type { RouteKey } from "./components/Sidebar";
 
 const DISCIPLINE_ROUTES: RouteKey[] = [
   "ux-design",
+  "research",
   "content-design",
   "service-design",
   "experience-strategy",

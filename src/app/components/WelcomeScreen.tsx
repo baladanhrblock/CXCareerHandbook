@@ -116,14 +116,14 @@ const ENTRY_CARDS: {
   {
     title: "Shared Competencies",
     description:
-      "The foundational behaviours and skills expected of every designer, regardless of discipline or level.",
+      "The seven competencies expected of every designer, regardless of discipline or level.",
     cta: "Explore competencies",
     route: "shared-competencies",
   },
   {
     title: "Browse Disciplines",
     description:
-      "Dive into the level-by-level expectations for UX Design, Content Design, Service Design, and Experience Strategy.",
+      "Dive into the level-by-level expectations for UX Design, Research, Content Design, Service Design, and Experience Strategy.",
     cta: "Browse disciplines",
     route: "ux-design",
   },

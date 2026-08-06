@@ -25,7 +25,19 @@ interface DisciplinePageProps {
 }
 
 export function DisciplinePage({ discipline }: DisciplinePageProps) {
-  const allRows = [...SHARED_ROWS, ...discipline.uniqueRows];
+  const sections = [
+    {
+      id: "shared",
+      label: "Shared competencies — expected of every designer",
+      collapsible: true,
+      rows: SHARED_ROWS,
+    },
+    {
+      id: "craft",
+      label: `${discipline.title} craft`,
+      rows: discipline.uniqueRows,
+    },
+  ];
 
   return (
     <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "64px 56px" }}>
@@ -155,8 +167,8 @@ export function DisciplinePage({ discipline }: DisciplinePageProps) {
       {/* Divider */}
       <div style={{ height: "1px", background: "#5C9770", opacity: 0.3, marginBottom: "32px" }} />
 
-      {/* Matrix — shared rows on top, unique rows below */}
-      <CompetencyMatrix rows={allRows} />
+      {/* Matrix — shared rows grouped on top, craft rows below */}
+      <CompetencyMatrix sections={sections} />
     </div>
   );
 }

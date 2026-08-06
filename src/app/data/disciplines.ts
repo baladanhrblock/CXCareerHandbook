@@ -199,6 +199,71 @@ const serviceDesign: DisciplineData = {
   ],
 };
 
+// ─── Research ─────────────────────────────────────────────────────────────────
+
+const research: DisciplineData = {
+  id: "research",
+  title: "Research",
+  description:
+    "Uncovering what customers need through evidence — planning studies, running them, and turning findings into decisions.",
+  skillChips: [
+    "Qualitative methods",
+    "Quantitative methods",
+    "Usability testing",
+    "Interview moderation",
+    "Survey design",
+    "Concept testing",
+    "Participant recruiting",
+    "Analysis & synthesis",
+    "Research repository",
+    "Behavioural analytics",
+    "Diary & longitudinal studies",
+    "Stakeholder readouts",
+  ],
+  chipsBold: true,
+  uniqueRows: [
+    {
+      id: "research-study-design",
+      label: "Study Design & Methods",
+      type: "unique",
+      tag: "Research craft",
+      cells: {
+        associate: { text: "Runs prescribed studies against a defined protocol; assists with moderation and note-taking.", provenance: "draft" },
+        mid: { text: "Selects appropriate methods for a defined question and designs the study independently.", provenance: "draft" },
+        senior: { text: "Designs mixed-method programmes for complex questions and knows when not to research.", provenance: "draft" },
+        lead: { text: "Sets methodological standards and reviews study quality across the team.", provenance: "draft" },
+        principal: { text: "Defines the org's research approach and brings new methods into practice.", provenance: "draft" },
+      },
+    },
+    {
+      id: "research-synthesis-insight",
+      label: "Synthesis & Insight",
+      type: "unique",
+      tag: "Research craft",
+      cells: {
+        associate: { text: "Organises findings and reports what participants said.", provenance: "draft" },
+        mid: { text: "Analyses data into themes and clear findings tied to the original question.", provenance: "draft" },
+        senior: { text: "Turns findings into insight that changes a product decision, and connects across studies.", provenance: "draft" },
+        lead: { text: "Synthesises across the portfolio to surface patterns no single study shows.", provenance: "draft" },
+        principal: { text: "Shapes how the org understands its customers over time.", provenance: "draft" },
+      },
+    },
+    {
+      id: "research-ops-enablement",
+      label: "Research Operations & Enablement",
+      type: "unique",
+      tag: "Research craft",
+      cells: {
+        associate: { text: "Follows recruiting, consent, and repository practices.", provenance: "draft" },
+        mid: { text: "Runs their own participant operations and keeps the repository usable for others.", provenance: "draft" },
+        senior: { text: "Enables non-researchers to gather evidence responsibly and improves operations for the team.", provenance: "draft" },
+        lead: { text: "Owns research operations and governance for the team, including participant privacy and ethics.", provenance: "draft" },
+        principal: { text: "Builds the org's research infrastructure and democratisation strategy.", provenance: "draft" },
+      },
+    },
+  ],
+};
+
 // ─── Experience Strategy ──────────────────────────────────────────────────────
 
 const experienceStrategy: DisciplineData = {
@@ -263,6 +328,7 @@ const experienceStrategy: DisciplineData = {
 
 export const DISCIPLINES: Record<string, DisciplineData> = {
   "ux-design": uxDesign,
+  research: research,
   "content-design": contentDesign,
   "service-design": serviceDesign,
   "experience-strategy": experienceStrategy,
