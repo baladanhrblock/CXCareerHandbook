@@ -1,0 +1,578 @@
+import { useState, useRef, useEffect } from "react";
+import type { MatrixRow, Level } from "../data/sharedCompetencies";
+import { LEVELS } from "../data/sharedCompetencies";
+
+// ─── Side panel ───────────────────────────────────────────────────────────────
+
+interface PanelData {
+  rowLabel: string;
+  rowTag: string;
+  levelLabel: string;
+  text: string;
+  bullets?: string[];
+  provenance: "v1" | "draft";
+  aspirational?: boolean;
+}
+
+function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") onClose();
+    }
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+    }
+    document.addEventListener("keydown", handleKey);
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, [onClose]);
+
+  // Auto-focus panel on open for accessibility
+  useEffect(() => {
+    ref.current?.focus();
+  }, []);
+
+  return (
+    <>
+      <div
+        aria-hidden="true"
+        style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.18)", zIndex: 40 }}
+      />
+      <div
+        ref={ref}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${data.rowLabel} — ${data.levelLabel}`}
+        tabIndex={-1}
+        style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: "380px",
+          background: "#F8F8F5",
+          borderLeft: "1px solid #D4D4D3",
+          zIndex: 50,
+          display: "flex",
+          flexDirection: "column",
+          boxShadow: "-4px 0 24px rgba(0,0,0,0.08)",
+          outline: "none",
+        }}
+      >
+        <div
+          style={{
+            padding: "24px 24px 16px",
+            borderBottom: "1px solid #D4D4D3",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            gap: "12px",
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontFamily: "var(--font-brand)",
+                fontSize: "11px",
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "#9FA4AA",
+                marginBottom: "4px",
+              }}
+            >
+              {data.levelLabel}
+            </div>
+            <div
+              style={{
+                fontFamily: "var(--font-brand)",
+                fontSize: "18px",
+                fontWeight: 700,
+                color: "#005D1F",
+                letterSpacing: "0.02em",
+              }}
+            >
+              {data.rowLabel}
+            </div>
+            <div style={{ display: "flex", gap: "6px", marginTop: "6px", flexWrap: "wrap" }}>
+              <span
+                style={{
+                  display: "inline-block",
+                  background: "#D6E5DB",
+                  color: "#003512",
+                  fontFamily: "var(--font-brand)",
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  letterSpacing: "0.08em",
+                  textTransform: "uppercase",
+                  padding: "2px 8px",
+                  borderRadius: "3px",
+                }}
+              >
+                {data.rowTag}
+              </span>
+              {data.aspirational && (
+                <span
+                  style={{
+                    display: "inline-block",
+                    background: "#E8EEF1",
+                    color: "#6E6E6E",
+                    fontFamily: "var(--font-brand)",
+                    fontSize: "10px",
+                    fontWeight: 700,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    padding: "2px 8px",
+                    borderRadius: "3px",
+                  }}
+                >
+                  Aspirational
+                </span>
+              )}
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close detail panel"
+            style={{
+              background: "none",
+              border: "1px solid transparent",
+              cursor: "pointer",
+              color: "#6E6E6E",
+              fontSize: "20px",
+              lineHeight: 1,
+              padding: "4px 8px",
+              borderRadius: "4px",
+              flexShrink: 0,
+              transition: "border-color 0.12s, color 0.12s",
+            }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = "#005D1F"; e.currentTarget.style.color = "#005D1F"; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = "transparent"; e.currentTarget.style.color = "#6E6E6E"; }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "#005D1F"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "#6E6E6E"; }}
+          >
+            ×
+          </button>
+        </div>
+
+        <div style={{ padding: "24px", flex: 1, overflowY: "auto" }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              marginBottom: "16px",
+              padding: "4px 10px",
+              borderRadius: "4px",
+              background: data.provenance === "draft" ? "#FFF3CD" : "#E8EEF1",
+              border: `1px solid ${data.provenance === "draft" ? "#F5CC02" : "#D6DAE0"}`,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "var(--font-brand)",
+                fontSize: "11px",
+                fontWeight: 700,
+                color: data.provenance === "draft" ? "#7A5F00" : "#6E6E6E",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+              }}
+            >
+              {data.provenance === "draft" ? "Draft — verify" : "V1 — verified"}
+            </span>
+          </div>
+
+          {data.bullets && data.bullets.length > 0 ? (
+            <ul style={{ margin: 0, padding: "0 0 0 18px" }}>
+              {data.bullets.map((b, i) => (
+                <li
+                  key={i}
+                  style={{
+                    fontFamily: "var(--font-brand)",
+                    fontSize: "15px",
+                    fontWeight: data.provenance === "draft" ? 700 : 400,
+                    color: "#262626",
+                    lineHeight: 1.7,
+                    marginBottom: "8px",
+                  }}
+                >
+                  {b}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p
+              style={{
+                fontFamily: "var(--font-brand)",
+                fontSize: "15px",
+                fontWeight: data.provenance === "draft" ? 700 : 400,
+                color: "#262626",
+                lineHeight: 1.7,
+                margin: 0,
+              }}
+            >
+              {data.text}
+            </p>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ─── Level header ─────────────────────────────────────────────────────────────
+// Renders a <div> — the outer <th> wrapper lives in the table thead
+
+function LevelHeader({ label, intent }: { label: string; intent: string }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ position: "relative", width: "100%", height: "100%" }}
+    >
+      {label}
+      {hovered && (
+        <div
+          role="tooltip"
+          style={{
+            position: "absolute",
+            top: "calc(100% + 6px)",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "#262626",
+            color: "#FFFFFF",
+            fontFamily: "var(--font-brand)",
+            fontSize: "11px",
+            fontWeight: 400,
+            letterSpacing: "normal",
+            textTransform: "none",
+            padding: "6px 10px",
+            borderRadius: "4px",
+            whiteSpace: "nowrap",
+            zIndex: 20,
+            pointerEvents: "none",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+          }}
+        >
+          {intent}
+          <div
+            style={{
+              position: "absolute",
+              top: "-5px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: 0,
+              height: 0,
+              borderLeft: "5px solid transparent",
+              borderRight: "5px solid transparent",
+              borderBottom: "5px solid #262626",
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Row tag ──────────────────────────────────────────────────────────────────
+
+function RowTag({ label, type }: { label: string; type: "shared" | "unique" }) {
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        marginTop: "4px",
+        padding: "1px 6px",
+        borderRadius: "3px",
+        fontFamily: "var(--font-brand)",
+        fontSize: "9px",
+        fontWeight: 700,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        background: type === "shared" ? "#D6E5DB" : "#E8EEF1",
+        color: type === "shared" ? "#003512" : "#6E6E6E",
+      }}
+    >
+      {label}
+    </span>
+  );
+}
+
+// ─── Hatch overlay for aspirational cells ─────────────────────────────────────
+
+const HATCH_BG =
+  "repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(0,0,0,0.035) 5px, rgba(0,0,0,0.035) 6px)";
+
+// ─── Matrix cell ──────────────────────────────────────────────────────────────
+
+function MatrixCell({
+  row,
+  level,
+  onClick,
+}: {
+  row: MatrixRow;
+  level: Level;
+  onClick: () => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const cell = row.cells[level];
+  const isDraft = cell.provenance === "draft";
+  const isAspirational = !!cell.aspirational;
+
+  const bgBase = row.type === "shared" ? "#D6E5DB" : isAspirational ? "#EDF0F4" : "#F1F5F7";
+  const bgHover = row.type === "shared" ? "#C4D9CB" : isAspirational ? "#E2E7ED" : "#E8EEF1";
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onClick();
+    }
+  }
+
+  return (
+    <td
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      tabIndex={0}
+      role="button"
+      aria-label={`${row.label} — ${level}: ${cell.text}`}
+      style={{
+        position: "relative",
+        padding: "12px 14px",
+        verticalAlign: "top",
+        borderRight: "1px solid #D4D4D3",
+        borderBottom: "1px solid #D4D4D3",
+        background: hovered ? bgHover : bgBase,
+        cursor: "pointer",
+        transition: "background 0.12s",
+        outline: "none",
+      }}
+      onFocus={(e) => { e.currentTarget.style.boxShadow = "inset 0 0 0 2px #005D1F"; }}
+      onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+    >
+      {isAspirational && !hovered && (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: HATCH_BG,
+            pointerEvents: "none",
+          }}
+        />
+      )}
+      {cell.bullets && cell.bullets.length > 0 ? (
+        <ul style={{ margin: 0, padding: "0 0 0 14px", position: "relative" }}>
+          {cell.bullets.map((b, i) => (
+            <li
+              key={i}
+              style={{
+                fontFamily: "var(--font-brand)",
+                fontSize: "12px",
+                fontWeight: isDraft ? 700 : 400,
+                color: isAspirational ? "#6E6E6E" : "#262626",
+                lineHeight: 1.55,
+                marginBottom: "3px",
+              }}
+            >
+              {b}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <span
+          style={{
+            fontFamily: "var(--font-brand)",
+            fontSize: "12px",
+            fontWeight: isDraft ? 700 : 400,
+            color: isAspirational ? "#6E6E6E" : "#262626",
+            lineHeight: 1.55,
+            display: "block",
+            position: "relative",
+          }}
+        >
+          {cell.text}
+        </span>
+      )}
+    </td>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+
+export interface CompetencyMatrixProps {
+  rows: MatrixRow[];
+  /** Highlight a specific level column with a "you are here" marker */
+  highlightLevel?: Level;
+}
+
+export function CompetencyMatrix({ rows, highlightLevel }: CompetencyMatrixProps) {
+  const [panel, setPanel] = useState<PanelData | null>(null);
+
+  function openPanel(row: MatrixRow, level: Level) {
+    const levelMeta = LEVELS.find((l) => l.key === level)!;
+    const cell = row.cells[level];
+    setPanel({
+      rowLabel: row.label,
+      rowTag: row.tag,
+      levelLabel: levelMeta.label,
+      text: cell.text,
+      bullets: cell.bullets,
+      provenance: cell.provenance,
+      aspirational: cell.aspirational,
+    });
+  }
+
+  return (
+    <div>
+      {/* Legend */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "20px",
+          marginBottom: "12px",
+          fontFamily: "var(--font-brand)",
+          fontSize: "11px",
+          color: "#6E6E6E",
+        }}
+      >
+        <span>
+          <strong style={{ fontWeight: 700 }}>Bold</strong> = draft content to verify
+        </span>
+        <span style={{ color: "#D4D4D3" }}>·</span>
+        <span>Regular = from V1</span>
+        <span style={{ color: "#D4D4D3" }}>·</span>
+        <span style={{ color: "#9FA4AA" }}>Click or press Enter on any cell for detail</span>
+      </div>
+
+      {/* Horizontally scrollable wrapper — does not break outer layout */}
+      <div
+        style={{
+          overflowX: "auto",
+          borderRadius: "6px",
+          border: "1px solid #D4D4D3",
+          maxWidth: "100%",
+        }}
+      >
+        <table
+          style={{
+            width: "100%",
+            minWidth: "760px",
+            borderCollapse: "collapse",
+            tableLayout: "fixed",
+          }}
+        >
+          <colgroup>
+            <col style={{ width: "148px" }} />
+            {LEVELS.map((l) => (
+              <col key={l.key} />
+            ))}
+          </colgroup>
+
+          <thead>
+            <tr>
+              <th
+                style={{
+                  padding: "12px 14px",
+                  background: "#003512",
+                  borderRight: "1px solid rgba(255,255,255,0.08)",
+                  textAlign: "left",
+                  fontFamily: "var(--font-brand)",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.4)",
+                }}
+              >
+                Competency
+              </th>
+              {LEVELS.map((l) => (
+                <th
+                  key={l.key}
+                  style={{
+                    position: "relative",
+                    padding: "12px 14px",
+                    fontFamily: "var(--font-brand)",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: "#FFFFFF",
+                    textAlign: "left",
+                    background: "#003512",
+                    borderRight: "1px solid rgba(255,255,255,0.08)",
+                    cursor: "default",
+                  }}
+                >
+                  {highlightLevel === l.key && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: "3px",
+                        background: "#00E95C",
+                      }}
+                    />
+                  )}
+                  <LevelHeader label={l.label} intent={l.intent} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.id}>
+                <td
+                  style={{
+                    padding: "12px 14px",
+                    verticalAlign: "top",
+                    borderRight: "1px solid #D4D4D3",
+                    borderBottom: "1px solid #D4D4D3",
+                    background: row.type === "shared" ? "#D6E5DB" : "#F1F5F7",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "var(--font-brand)",
+                      fontSize: "13px",
+                      fontWeight: 700,
+                      color: "#003512",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {row.label}
+                  </div>
+                  <RowTag label={row.tag} type={row.type} />
+                </td>
+                {LEVELS.map((l) => (
+                  <MatrixCell
+                    key={l.key}
+                    row={row}
+                    level={l.key}
+                    onClick={() => openPanel(row, l.key)}
+                  />
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {panel && <SidePanel data={panel} onClose={() => setPanel(null)} />}
+    </div>
+  );
+}
