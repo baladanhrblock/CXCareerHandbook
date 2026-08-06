@@ -381,23 +381,25 @@ function WhereYouAre({ disciplineId, level }: { disciplineId: string; level: Lev
                 >
                   {row.label}
                 </div>
-                <span
-                  style={{
-                    display: "inline-block",
-                    padding: "1px 6px",
-                    borderRadius: "3px",
-                    fontFamily: "var(--font-brand)",
-                    fontSize: "9px",
-                    fontWeight: 700,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    background: isShared ? "#D6E5DB" : "#E8EEF1",
-                    color: isShared ? "#003512" : "#6E6E6E",
-                    filter: isShared ? "brightness(0.9)" : "none",
-                  }}
-                >
-                  {row.tag}
-                </span>
+                {row.tag !== "Department-wide" && (
+                  <span
+                    style={{
+                      display: "inline-block",
+                      padding: "1px 6px",
+                      borderRadius: "3px",
+                      fontFamily: "var(--font-brand)",
+                      fontSize: "9px",
+                      fontWeight: 700,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      background: isShared ? "#D6E5DB" : "#E8EEF1",
+                      color: isShared ? "#003512" : "#6E6E6E",
+                      filter: isShared ? "brightness(0.9)" : "none",
+                    }}
+                  >
+                    {row.tag}
+                  </span>
+                )}
               </div>
 
               {/* Cell text */}
@@ -600,7 +602,9 @@ function AvenueCard({
       style={{
         padding: "20px 22px",
         background: "#F8F8F5",
-        border: `1px solid ${hovered && onClick ? "#005D1F" : "#D4D4D3"}`,
+        borderTop: `1px solid ${hovered && onClick ? "#005D1F" : "#D4D4D3"}`,
+        borderRight: `1px solid ${hovered && onClick ? "#005D1F" : "#D4D4D3"}`,
+        borderBottom: `1px solid ${hovered && onClick ? "#005D1F" : "#D4D4D3"}`,
         borderLeft: `4px solid ${accent ? "#00E95C" : "#5C9770"}`,
         borderRadius: "6px",
         cursor: onClick ? "pointer" : "default",
@@ -856,7 +860,9 @@ function Step3({
               style={{
                 padding: "18px 20px",
                 background: "#F8F8F5",
-                border: `1px solid ${state.checked[i] ? "#5C9770" : "#D4D4D3"}`,
+                borderTop: `1px solid ${state.checked[i] ? "#5C9770" : "#D4D4D3"}`,
+                borderRight: `1px solid ${state.checked[i] ? "#5C9770" : "#D4D4D3"}`,
+                borderBottom: `1px solid ${state.checked[i] ? "#5C9770" : "#D4D4D3"}`,
                 borderLeft: `4px solid ${state.checked[i] ? "#005D1F" : isDraft ? "#F5CC02" : "#D4D4D3"}`,
                 borderRadius: "6px",
                 transition: "border-color 0.15s",

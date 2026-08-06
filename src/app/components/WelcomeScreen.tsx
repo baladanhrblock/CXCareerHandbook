@@ -4,26 +4,6 @@ interface WelcomeScreenProps {
   onNavigate: (route: RouteKey) => void;
 }
 
-function BullseyeIcon({ size = 40 }: { size?: number }) {
-  const r = size / 2;
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
-      <circle cx={r} cy={r} r={r - 2} stroke="#005D1F" strokeWidth="2" />
-      <circle cx={r} cy={r} r={r * 0.6} stroke="#005D1F" strokeWidth="2" />
-      <circle cx={r} cy={r} r={r * 0.25} fill="#005D1F" />
-    </svg>
-  );
-}
-
-function ArrowRight() {
-  return (
-    <svg width="80" height="20" viewBox="0 0 80 20" fill="none">
-      <line x1="0" y1="10" x2="68" y2="10" stroke="#5C9770" strokeWidth="2" />
-      <polygon points="68,5 80,10 68,15" fill="#5C9770" />
-    </svg>
-  );
-}
-
 interface EntryCardProps {
   title: string;
   description: string;
@@ -106,6 +86,21 @@ function EntryCard({
     </div>
   );
 }
+
+const HANDBOOK_STEPS: { title: string; body: string }[] = [
+  {
+    title: "Start with the shared competencies",
+    body: "Seven expectations apply to every designer, whatever your discipline. Read these first — they carry the most weight early in your career.",
+  },
+  {
+    title: "Then read your discipline",
+    body: "Each discipline adds three craft competencies on top of the shared set, described level by level from Associate to Principal.",
+  },
+  {
+    title: "Place yourself, then plan",
+    body: "Use Where I Am Now to mark your current level, see what changes at the next one, and work through the reflection questions with your lead.",
+  },
+];
 
 const ENTRY_CARDS: {
   title: string;
@@ -198,69 +193,74 @@ export function WelcomeScreen({ onNavigate }: WelcomeScreenProps) {
         }}
       />
 
-      {/* Novice → Expert motif */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "24px",
-          marginBottom: "56px",
-          padding: "28px 32px",
-          background: "#F8F8F5",
-          border: "1px solid #D4D4D3",
-          borderRadius: "8px",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-          <BullseyeIcon size={40} />
-          <span
-            style={{
-              fontFamily: "var(--font-brand)",
-              fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "#6E6E6E",
-            }}
-          >
-            Novice
-          </span>
-        </div>
+      {/* How to use this handbook */}
+      <section style={{ marginBottom: "56px" }}>
+        <h2
+          style={{
+            fontFamily: "var(--font-brand)",
+            fontSize: "11px",
+            fontWeight: 700,
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "#005D1F",
+            margin: "0 0 20px",
+          }}
+        >
+          How to use this handbook
+        </h2>
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "8px", alignItems: "center" }}>
-          <ArrowRight />
-          <span
-            style={{
-              fontFamily: "var(--font-brand)",
-              fontSize: "13px",
-              fontWeight: 400,
-              color: "#6E6E6E",
-              textAlign: "center",
-              maxWidth: "480px",
-              lineHeight: 1.6,
-            }}
-          >
-            As you grow through the levels, we expect you to increase both the
-            number of skills you attempt and the consistency and speed of each.
-          </span>
+        <div
+          style={{
+            display: "flex",
+            gap: "24px",
+            padding: "28px 32px",
+            background: "#F8F8F5",
+            border: "1px solid #D4D4D3",
+            borderRadius: "8px",
+          }}
+        >
+          {HANDBOOK_STEPS.map((step, i) => (
+            <div key={step.title} style={{ flex: 1 }}>
+              <div
+                style={{
+                  fontFamily: "var(--font-brand)",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  color: "#5C9770",
+                  marginBottom: "8px",
+                }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </div>
+              <div
+                style={{
+                  fontFamily: "var(--font-brand)",
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  color: "#003512",
+                  marginBottom: "6px",
+                  lineHeight: 1.35,
+                }}
+              >
+                {step.title}
+              </div>
+              <p
+                style={{
+                  fontFamily: "var(--font-brand)",
+                  fontSize: "13px",
+                  fontWeight: 400,
+                  color: "#6E6E6E",
+                  lineHeight: 1.65,
+                  margin: 0,
+                }}
+              >
+                {step.body}
+              </p>
+            </div>
+          ))}
         </div>
-
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-          <BullseyeIcon size={40} />
-          <span
-            style={{
-              fontFamily: "var(--font-brand)",
-              fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "#005D1F",
-            }}
-          >
-            Expert
-          </span>
-        </div>
-      </div>
+      </section>
 
       {/* Entry cards */}
       <div style={{ display: "flex", gap: "20px" }}>

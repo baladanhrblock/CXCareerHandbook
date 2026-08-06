@@ -270,8 +270,6 @@ const experienceStrategy: DisciplineData = {
   id: "experience-strategy",
   title: "Experience Strategy",
   description: "Connecting experience decisions to vision, business outcomes, and the broader portfolio.",
-  badge: "Emerging track",
-  note: "This track is forward-looking — we currently have one Lead in Experience Strategy. Associate–Senior expectations are aspirational.",
   skillChips: [
     "Experience vision",
     "Narrative framing",

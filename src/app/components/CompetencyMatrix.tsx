@@ -6,7 +6,6 @@ import { LEVELS } from "../data/sharedCompetencies";
 
 interface PanelData {
   rowLabel: string;
-  rowTag: string;
   rowDefinition?: string;
   levelLabel: string;
   text: string;
@@ -101,22 +100,6 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
               {data.rowLabel}
             </div>
             <div style={{ display: "flex", gap: "6px", marginTop: "6px", flexWrap: "wrap" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  background: "#D6E5DB",
-                  color: "#003512",
-                  fontFamily: "var(--font-brand)",
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  padding: "2px 8px",
-                  borderRadius: "3px",
-                }}
-              >
-                {data.rowTag}
-              </span>
               {data.aspirational && (
                 <span
                   style={{
@@ -178,32 +161,6 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
               {data.rowDefinition}
             </p>
           )}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              marginBottom: "16px",
-              padding: "4px 10px",
-              borderRadius: "4px",
-              background: data.provenance === "draft" ? "#FFF3CD" : "#E8EEF1",
-              border: `1px solid ${data.provenance === "draft" ? "#F5CC02" : "#D6DAE0"}`,
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-brand)",
-                fontSize: "11px",
-                fontWeight: 700,
-                color: data.provenance === "draft" ? "#7A5F00" : "#6E6E6E",
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-              }}
-            >
-              {data.provenance === "draft" ? "Draft — verify" : "V1 — verified"}
-            </span>
-          </div>
-
           {data.bullets && data.bullets.length > 0 ? (
             <ul style={{ margin: 0, padding: "0 0 0 18px" }}>
               {data.bullets.map((b, i) => (
@@ -212,7 +169,7 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
                   style={{
                     fontFamily: "var(--font-brand)",
                     fontSize: "15px",
-                    fontWeight: data.provenance === "draft" ? 700 : 400,
+                    fontWeight: 400,
                     color: "#262626",
                     lineHeight: 1.7,
                     marginBottom: "8px",
@@ -227,7 +184,7 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
               style={{
                 fontFamily: "var(--font-brand)",
                 fontSize: "15px",
-                fontWeight: data.provenance === "draft" ? 700 : 400,
+                fontWeight: 400,
                 color: "#262626",
                 lineHeight: 1.7,
                 margin: 0,
@@ -295,30 +252,6 @@ function LevelHeader({ label, intent }: { label: string; intent: string }) {
         </div>
       )}
     </div>
-  );
-}
-
-// ─── Row tag ──────────────────────────────────────────────────────────────────
-
-function RowTag({ label, type }: { label: string; type: "shared" | "unique" }) {
-  return (
-    <span
-      style={{
-        display: "inline-block",
-        marginTop: "4px",
-        padding: "1px 6px",
-        borderRadius: "3px",
-        fontFamily: "var(--font-brand)",
-        fontSize: "9px",
-        fontWeight: 700,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
-        background: type === "shared" ? "#D6E5DB" : "#E8EEF1",
-        color: type === "shared" ? "#003512" : "#6E6E6E",
-      }}
-    >
-      {label}
-    </span>
   );
 }
 
@@ -415,7 +348,6 @@ function MatrixCell({
 }) {
   const [hovered, setHovered] = useState(false);
   const cell = row.cells[level];
-  const isDraft = cell.provenance === "draft";
   const isAspirational = !!cell.aspirational;
 
   const bgBase = row.type === "shared" ? "#D6E5DB" : isAspirational ? "#EDF0F4" : "#F1F5F7";
@@ -470,7 +402,7 @@ function MatrixCell({
               style={{
                 fontFamily: "var(--font-brand)",
                 fontSize: "12px",
-                fontWeight: isDraft ? 700 : 400,
+                fontWeight: 400,
                 color: isAspirational ? "#6E6E6E" : "#262626",
                 lineHeight: 1.55,
                 marginBottom: "3px",
@@ -485,7 +417,7 @@ function MatrixCell({
           style={{
             fontFamily: "var(--font-brand)",
             fontSize: "12px",
-            fontWeight: isDraft ? 700 : 400,
+            fontWeight: 400,
             color: isAspirational ? "#6E6E6E" : "#262626",
             lineHeight: 1.55,
             display: "block",
@@ -531,7 +463,6 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
     const cell = row.cells[level];
     setPanel({
       rowLabel: row.label,
-      rowTag: row.tag,
       rowDefinition: row.definition,
       levelLabel: levelMeta.label,
       text: cell.text,
@@ -543,27 +474,6 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
 
   return (
     <div>
-      {/* Legend */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "20px",
-          marginBottom: "12px",
-          fontFamily: "var(--font-brand)",
-          fontSize: "11px",
-          color: "#6E6E6E",
-        }}
-      >
-        <span>
-          <strong style={{ fontWeight: 700 }}>Bold</strong> = draft content to verify
-        </span>
-        <span style={{ color: "#D4D4D3" }}>·</span>
-        <span>Regular = from V1</span>
-        <span style={{ color: "#D4D4D3" }}>·</span>
-        <span style={{ color: "#9FA4AA" }}>Click or press Enter on any cell for detail</span>
-      </div>
-
       {/* Horizontally scrollable wrapper — does not break outer layout */}
       <div
         style={{
@@ -694,7 +604,6 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
                               {row.definition}
                             </div>
                           )}
-                          <RowTag label={row.tag} type={row.type} />
                         </td>
                         {LEVELS.map((l) => (
                           <MatrixCell

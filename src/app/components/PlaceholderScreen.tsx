@@ -60,9 +60,11 @@ export function PlaceholderScreen({ title, description }: PlaceholderScreenProps
           marginTop: "48px",
           padding: "32px",
           background: "#F8F8F5",
-          border: "1px solid #D4D4D3",
-          borderRadius: "8px",
+          borderTop: "1px solid #D4D4D3",
+          borderRight: "1px solid #D4D4D3",
+          borderBottom: "1px solid #D4D4D3",
           borderLeft: "4px solid #00E95C",
+          borderRadius: "8px",
         }}
       >
         <p

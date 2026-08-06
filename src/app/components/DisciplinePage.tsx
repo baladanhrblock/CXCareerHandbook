@@ -1,5 +1,4 @@
 import type { DisciplineData } from "../data/disciplines";
-import { SHARED_ROWS } from "../data/sharedCompetencies";
 import { CompetencyMatrix } from "./CompetencyMatrix";
 
 // Small bullseye motif — reused from Welcome screen as a decorative accent
@@ -26,12 +25,6 @@ interface DisciplinePageProps {
 
 export function DisciplinePage({ discipline }: DisciplinePageProps) {
   const sections = [
-    {
-      id: "shared",
-      label: "Shared competencies — expected of every designer",
-      collapsible: true,
-      rows: SHARED_ROWS,
-    },
     {
       id: "craft",
       label: `${discipline.title} craft`,
@@ -110,7 +103,9 @@ export function DisciplinePage({ discipline }: DisciplinePageProps) {
               marginTop: "14px",
               padding: "12px 16px",
               background: "#F8F8F5",
-              border: "1px solid #D4D4D3",
+              borderTop: "1px solid #D4D4D3",
+              borderRight: "1px solid #D4D4D3",
+              borderBottom: "1px solid #D4D4D3",
               borderLeft: "4px solid #00E95C",
               borderRadius: "4px",
               fontFamily: "var(--font-brand)",
@@ -124,44 +119,6 @@ export function DisciplinePage({ discipline }: DisciplinePageProps) {
             {discipline.note}
           </div>
         )}
-      </div>
-
-      {/* Skill chips */}
-      <div style={{ marginBottom: "32px" }}>
-        <div
-          style={{
-            fontFamily: "var(--font-brand)",
-            fontSize: "11px",
-            fontWeight: 700,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
-            color: "#9FA4AA",
-            marginBottom: "10px",
-          }}
-        >
-          Craft skills
-        </div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-          {discipline.skillChips.map((chip) => (
-            <span
-              key={chip}
-              style={{
-                display: "inline-block",
-                padding: "5px 12px",
-                borderRadius: "20px",
-                background: "#F1F5F7",
-                border: "1px solid #D6DAE0",
-                fontFamily: "var(--font-brand)",
-                fontSize: "12px",
-                fontWeight: discipline.chipsBold ? 700 : 400,
-                color: "#262626",
-                transition: "border-color 0.12s",
-              }}
-            >
-              {chip}
-            </span>
-          ))}
-        </div>
       </div>
 
       {/* Divider */}

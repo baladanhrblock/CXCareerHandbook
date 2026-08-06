@@ -46,7 +46,9 @@ function NavItem({
         width: "100%",
         padding: indent ? "8px 20px 8px 36px" : "10px 20px",
         background: "none",
-        border: "none",
+        borderTop: "none",
+        borderRight: "none",
+        borderBottom: "none",
         borderLeft: isActive ? "3px solid #00E95C" : "3px solid transparent",
         cursor: "pointer",
         textAlign: "left",
@@ -151,7 +153,9 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
             width: "100%",
             padding: "10px 20px",
             background: "none",
-            border: "none",
+            borderTop: "none",
+            borderRight: "none",
+            borderBottom: "none",
             borderLeft: isDisciplineActive
               ? "3px solid #00E95C"
               : "3px solid transparent",

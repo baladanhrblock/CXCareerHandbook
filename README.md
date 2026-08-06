@@ -1,7 +1,7 @@
 
-  # Design Career Handbook Shell
+  # Design Career Handbook
 
-  This is a code bundle for Design Career Handbook Shell. The original project is available at https://www.figma.com/design/b8LpCpzdvS9YmAR41UnLWG/Design-Career-Handbook-Shell.
+  This is a code bundle for Design Career Handbook. The original project is available at https://www.figma.com/design/b8LpCpzdvS9YmAR41UnLWG/Design-Career-Handbook.
 
   ## Running the code
 
