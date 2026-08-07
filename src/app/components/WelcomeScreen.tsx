@@ -135,9 +135,8 @@ export function WelcomeScreen({ onNavigate }: WelcomeScreenProps) {
   return (
     <div
       style={{
-        maxWidth: "1100px",
-        margin: "0 auto",
-        padding: "64px 56px",
+        width: "100%",
+        padding: "64px 64px 80px",
       }}
     >
       {/* Heading block */}

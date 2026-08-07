@@ -5,9 +5,8 @@ export function SharedCompetenciesScreen() {
   return (
     <div
       style={{
-        maxWidth: "1100px",
-        margin: "0 auto",
-        padding: "64px 56px",
+        width: "100%",
+        padding: "64px 64px 80px",
       }}
     >
       {/* Page header */}

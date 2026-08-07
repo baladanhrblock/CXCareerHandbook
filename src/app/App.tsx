@@ -105,7 +105,7 @@ export default function App() {
             className="no-print"
             style={{
               borderTop: "1px solid #D4D4D3",
-              padding: "10px 56px",
+              padding: "10px 64px",
               background: "#F6F4E9",
               display: "flex",
               alignItems: "center",

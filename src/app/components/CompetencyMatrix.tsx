@@ -244,9 +244,9 @@ function LevelHeader({ label, intent }: { label: string; intent: string }) {
               transform: "translateX(-50%)",
               width: 0,
               height: 0,
-              borderLeft: "5px solid transparent",
-              borderRight: "5px solid transparent",
-              borderBottom: "5px solid #262626",
+              borderWidth: "5px",
+              borderStyle: "solid",
+              borderColor: "transparent transparent #262626 transparent",
             }}
           />
         </div>
