@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Level } from "../data/sharedCompetencies";
-import { LEVELS, SHARED_ROWS } from "../data/sharedCompetencies";
+import { LEVELS } from "../data/sharedCompetencies";
 import { DISCIPLINES } from "../data/disciplines";
 import type { RouteKey } from "./Sidebar";
 
@@ -298,146 +298,7 @@ function Step1({
   );
 }
 
-// ─── Step 2A: Where You Are ────────────────────────────────────────────────────
-
-function WhereYouAre({ disciplineId, level }: { disciplineId: string; level: Level }) {
-  const discipline = DISCIPLINES[disciplineId];
-  const levelLabel = LEVELS.find((l) => l.key === level)!.label;
-  const allRows = [...SHARED_ROWS, ...discipline.uniqueRows];
-
-  return (
-    <div>
-      {/* You are here badge */}
-      <div
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "8px",
-          padding: "6px 14px",
-          background: "#00E95C",
-          borderRadius: "20px",
-          marginBottom: "20px",
-        }}
-      >
-        <span
-          style={{
-            width: "8px",
-            height: "8px",
-            borderRadius: "50%",
-            background: "#003512",
-            flexShrink: 0,
-          }}
-        />
-        <span
-          style={{
-            fontFamily: "var(--font-brand)",
-            fontSize: "12px",
-            fontWeight: 700,
-            color: "#003512",
-            letterSpacing: "0.06em",
-          }}
-        >
-          You are here — {discipline.title} · {levelLabel}
-        </span>
-      </div>
-
-      {/* Competency cards */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "0", borderRadius: "6px", overflow: "hidden", border: "1px solid #D4D4D3" }}>
-        {allRows.map((row, i) => {
-          const cell = row.cells[level];
-          const isShared = row.type === "shared";
-          const isAspirational = !!cell.aspirational;
-          const bgColor = isShared ? "#D6E5DB" : isAspirational ? "#EDF0F4" : "#F1F5F7";
-
-          return (
-            <div
-              key={row.id}
-              style={{
-                display: "flex",
-                gap: "0",
-                borderTop: i > 0 ? "1px solid #D4D4D3" : "none",
-                background: bgColor,
-                position: "relative",
-              }}
-            >
-              {/* Row label */}
-              <div
-                style={{
-                  width: "200px",
-                  minWidth: "200px",
-                  padding: "14px 16px",
-                  borderRight: "1px solid #D4D4D3",
-                }}
-              >
-                <div
-                  style={{
-                    fontFamily: "var(--font-brand)",
-                    fontSize: "13px",
-                    fontWeight: 700,
-                    color: "#003512",
-                    lineHeight: 1.3,
-                    marginBottom: "4px",
-                  }}
-                >
-                  {row.label}
-                </div>
-                {row.tag !== "Department-wide" && (
-                  <span
-                    style={{
-                      display: "inline-block",
-                      padding: "1px 6px",
-                      borderRadius: "3px",
-                      fontFamily: "var(--font-brand)",
-                      fontSize: "9px",
-                      fontWeight: 700,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      background: isShared ? "#D6E5DB" : "#E8EEF1",
-                      color: isShared ? "#003512" : "#6E6E6E",
-                      filter: isShared ? "brightness(0.9)" : "none",
-                    }}
-                  >
-                    {row.tag}
-                  </span>
-                )}
-              </div>
-
-              {/* Cell text */}
-              <div style={{ flex: 1, padding: "14px 16px", position: "relative" }}>
-                {isAspirational && (
-                  <div
-                    aria-hidden="true"
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      background:
-                        "repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(0,0,0,0.035) 5px, rgba(0,0,0,0.035) 6px)",
-                      pointerEvents: "none",
-                    }}
-                  />
-                )}
-                <span
-                  style={{
-                    fontFamily: "var(--font-brand)",
-                    fontSize: "13px",
-                    fontWeight: cell.provenance === "draft" ? 700 : 400,
-                    color: isAspirational ? "#6E6E6E" : "#262626",
-                    lineHeight: 1.6,
-                    position: "relative",
-                  }}
-                >
-                  {cell.text}
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// ─── Step 2B: Advance (delta to next level) ───────────────────────────────────
+// ─── Step 2A: Advance (delta to next level) ───────────────────────────────────
 
 function AdvanceDelta({ disciplineId, level }: { disciplineId: string; level: Level }) {
   const nextLevel = NEXT_LEVEL[level];
@@ -698,37 +559,25 @@ function Step2({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "48px" }}>
-      {/* A: Where You Are */}
-      <section aria-labelledby="where-you-are-heading">
-        <SectionTitle>A · Where you are</SectionTitle>
-        <SectionHeading>
-          <span id="where-you-are-heading">Your current expectations</span>
-        </SectionHeading>
-        <p style={{ fontFamily: "var(--font-brand)", fontSize: "13px", color: "#6E6E6E", marginBottom: "20px", lineHeight: 1.6 }}>
-          All six competencies at your current level, shared and craft.
-        </p>
-        <WhereYouAre disciplineId={disciplineId} level={level} />
-      </section>
-
-      {/* B: Advance */}
+      {/* A: Advance */}
       {nextLevel && (
         <section aria-labelledby="advance-heading">
-          <SectionTitle>B · Advance</SectionTitle>
+          <SectionTitle>A · Advance</SectionTitle>
           <SectionHeading>
             <span id="advance-heading">
               {LEVELS.find((l) => l.key === level)!.label} → {LEVELS.find((l) => l.key === nextLevel)!.label}
             </span>
           </SectionHeading>
           <p style={{ fontFamily: "var(--font-brand)", fontSize: "13px", color: "#6E6E6E", marginBottom: "20px", lineHeight: 1.6 }}>
-            Side-by-side comparison of all six competencies between your current and next level.
+            Side-by-side comparison of all competencies between your current and next level.
           </p>
           <AdvanceDelta disciplineId={disciplineId} level={level} />
         </section>
       )}
 
-      {/* C: Avenues */}
+      {/* B: Avenues */}
       <section aria-labelledby="avenues-heading">
-        <SectionTitle>C · Avenues</SectionTitle>
+        <SectionTitle>B · Avenues</SectionTitle>
         <SectionHeading>
           <span id="avenues-heading">Paths open to you</span>
         </SectionHeading>

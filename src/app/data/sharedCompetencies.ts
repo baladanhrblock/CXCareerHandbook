@@ -13,6 +13,8 @@ export interface MatrixCell {
   bullets?: string[];
   /** Aspirational/forward-looking cells (Experience Strategy lower levels) */
   aspirational?: boolean;
+  /** Number of level columns this cell spans (default 1). The spanned cells are skipped in rendering. */
+  span?: number;
 }
 
 export interface MatrixRow {
@@ -66,8 +68,6 @@ export const SHARED_ROWS: MatrixRow[] = [
     label: "Communication",
     type: "shared",
     tag: "Department-wide",
-    definition:
-      "How well the designer articulates ideas and rationale to their team and stakeholders.",
     cells: {
       associate: {
         text: 'Presents work clearly to the immediate team and explains what they made. Needs support framing the "why" for stakeholders.',
@@ -96,8 +96,6 @@ export const SHARED_ROWS: MatrixRow[] = [
     label: "Strategic Thinking",
     type: "shared",
     tag: "Department-wide",
-    definition:
-      "How well the designer connects their daily work to broader business objectives and customer problems.",
     cells: {
       associate: {
         text: "Can state which customer problem their task serves when asked.",
@@ -126,8 +124,6 @@ export const SHARED_ROWS: MatrixRow[] = [
     label: "Ambiguity",
     type: "shared",
     tag: "Department-wide",
-    definition:
-      "How well the designer navigates unclear problems and adapts to shifting constraints.",
     cells: {
       associate: {
         text: "Asks for clarification early rather than stalling. Works well when the brief is defined.",
@@ -156,8 +152,6 @@ export const SHARED_ROWS: MatrixRow[] = [
     label: "Collaboration",
     type: "shared",
     tag: "Department-wide",
-    definition:
-      "How effectively the designer partners across disciplines and within their own team to achieve shared goals.",
     cells: {
       associate: {
         text: "Participates actively, shares work early, and responds to feedback without defensiveness.",
@@ -186,8 +180,6 @@ export const SHARED_ROWS: MatrixRow[] = [
     label: "Impact",
     type: "shared",
     tag: "Department-wide",
-    definition:
-      "How much the designer contributes to the product and the organization.",
     cells: {
       associate: {
         text: "Delivers assigned work that ships. Contribution is visible at the task level.",
@@ -216,8 +208,6 @@ export const SHARED_ROWS: MatrixRow[] = [
     label: "Autonomy",
     type: "shared",
     tag: "Department-wide",
-    definition:
-      "How independently the designer manages their own work and drives projects forward.",
     cells: {
       associate: {
         text: "Manages assigned tasks and flags blockers. Checks in frequently by design.",
@@ -246,8 +236,6 @@ export const SHARED_ROWS: MatrixRow[] = [
     label: "Leadership",
     type: "shared",
     tag: "Department-wide",
-    definition:
-      "How well the designer supports peers and elevates the team's capabilities.",
     cells: {
       associate: {
         text: "Supports peers informally — shares what they learn and contributes to team rituals.",

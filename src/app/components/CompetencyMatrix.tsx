@@ -340,10 +340,12 @@ const HATCH_BG =
 function MatrixCell({
   row,
   level,
+  colSpan,
   onClick,
 }: {
   row: MatrixRow;
   level: Level;
+  colSpan?: number;
   onClick: () => void;
 }) {
   const [hovered, setHovered] = useState(false);
@@ -368,6 +370,7 @@ function MatrixCell({
       onMouseLeave={() => setHovered(false)}
       tabIndex={0}
       role="button"
+      colSpan={colSpan}
       aria-label={`${row.label} — ${level}: ${cell.text}`}
       style={{
         position: "relative",
@@ -605,14 +608,25 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
                             </div>
                           )}
                         </td>
-                        {LEVELS.map((l) => (
-                          <MatrixCell
-                            key={l.key}
-                            row={row}
-                            level={l.key}
-                            onClick={() => openPanel(row, l.key)}
-                          />
-                        ))}
+                        {(() => {
+                          const tds = [];
+                          let i = 0;
+                          while (i < LEVELS.length) {
+                            const l = LEVELS[i];
+                            const span = row.cells[l.key].span ?? 1;
+                            tds.push(
+                              <MatrixCell
+                                key={l.key}
+                                row={row}
+                                level={l.key}
+                                colSpan={span > 1 ? span : undefined}
+                                onClick={() => openPanel(row, l.key)}
+                              />
+                            );
+                            i += span;
+                          }
+                          return tds;
+                        })()}
                       </tr>
                     ))}
                 </Fragment>
