@@ -110,7 +110,7 @@ export const CORE_ROWS: MatrixRow[] = [
         provenance: "draft",
       },
       lead: {
-        text: "Shapes the roadmap for their area — decides what design should work on, not just how.",
+        text: "Shapes the roadmap for their area: decides what design should work on, not just how.",
         provenance: "draft",
       },
       principal: {
@@ -134,7 +134,7 @@ export const CORE_ROWS: MatrixRow[] = [
         provenance: "draft",
       },
       senior: {
-        text: "Creates structure where there was none — frames the problem, sequences the unknowns, keeps the team moving.",
+        text: "Creates structure where there was none: frames the problem, sequences the unknowns, keeps the team moving.",
         provenance: "draft",
       },
       lead: {
@@ -194,7 +194,7 @@ export const CORE_ROWS: MatrixRow[] = [
         provenance: "draft",
       },
       lead: {
-        text: "Multiplies impact through others — the team ships better because of how they've set it up.",
+        text: "Multiplies impact through others: the team ships better because of how they've set it up.",
         provenance: "draft",
       },
       principal: {
@@ -238,7 +238,7 @@ export const CORE_ROWS: MatrixRow[] = [
     tag: "Department-wide",
     cells: {
       associate: {
-        text: "Supports peers informally — shares what they learn and contributes to team rituals.",
+        text: "Supports peers informally: shares what they learn and contributes to team rituals.",
         provenance: "draft",
       },
       mid: {

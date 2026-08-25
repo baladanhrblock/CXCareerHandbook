@@ -138,6 +138,53 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ─── Print styles for Where I Am Now assessment export ──────────────────── */
+@media print {
+  /* Remove scroll clipping so the full summary renders */
+  #main-content {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Reduce outer padding — the browser adds page margins */
+  .where-i-am-now-shell {
+    padding: 0 !important;
+  }
+
+  /* Preserve row background colours when printing */
+  .assessment-summary-content * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Keep each table row on one page where possible */
+  .summary-table tr {
+    page-break-inside: avoid;
+  }
+
+  /* Prevent orphaned headings */
+  .assessment-summary-content h2,
+  .assessment-summary-content h3 {
+    page-break-after: avoid;
+  }
+
+  /* Insert a page break before the Looking Ahead section */
+  .assessment-summary-content .looking-ahead-section {
+    page-break-before: always;
+  }
+
+  /* Base print typography */
+  .assessment-summary-content {
+    font-size: 10pt;
+    color: #000 !important;
+  }
+
+  .summary-table th,
+  .summary-table td {
+    font-size: 10pt;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

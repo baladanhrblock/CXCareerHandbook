@@ -192,15 +192,102 @@ function LevelChips({
   );
 }
 
-// ─── Compute visible level columns from the filter ────────────────────────────
-
 const LEVEL_ORDER: Level[] = ["associate", "mid", "senior", "lead", "principal"];
 
-function computeVisibleLevels(filter: LevelFilter): Level[] | undefined {
+// ─── Compare-with chips (radiogroup) ─────────────────────────────────────────
+
+function CompareChips({
+  selected,
+  value,
+  onChange,
+}: {
+  selected: Level;
+  value: Level | "none";
+  onChange: (id: Level | "none") => void;
+}) {
+  const options: { id: Level | "none"; label: string }[] = [
+    { id: "none", label: "None" },
+    ...LEVEL_ORDER.filter((l) => l !== selected).map((l) => ({
+      id: l as Level | "none",
+      label: LEVELS.find((lv) => lv.key === l)!.label,
+    })),
+  ];
+  const refs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  function handleKeyDown(e: React.KeyboardEvent, index: number) {
+    let nextIndex: number | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      nextIndex = (index + 1) % options.length;
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      nextIndex = (index - 1 + options.length) % options.length;
+    } else if (e.key === "Home") {
+      nextIndex = 0;
+    } else if (e.key === "End") {
+      nextIndex = options.length - 1;
+    }
+    if (nextIndex !== null) {
+      e.preventDefault();
+      const nextId = options[nextIndex].id;
+      onChange(nextId);
+      refs.current[nextId]?.focus();
+    }
+  }
+
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Compare with level"
+      style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}
+    >
+      {options.map(({ id, label }, index) => {
+        const isSelected = id === value;
+        return (
+          <button
+            key={id}
+            ref={(el) => { refs.current[id] = el; }}
+            type="button"
+            role="radio"
+            aria-checked={isSelected}
+            tabIndex={isSelected ? 0 : -1}
+            onClick={() => onChange(id)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: "20px",
+              fontFamily: "var(--font-brand)",
+              fontSize: "13px",
+              fontWeight: isSelected ? 700 : 400,
+              letterSpacing: "0.01em",
+              cursor: "pointer",
+              background: isSelected ? "#003512" : "#F1F5F7",
+              color: isSelected ? "#FFFFFF" : "#003512",
+              border: isSelected ? "1px solid #003512" : "1px solid #D6E5DB",
+              transition: "background 0.12s, color 0.12s, border-color 0.12s",
+            }}
+            onMouseEnter={(e) => {
+              if (!isSelected) e.currentTarget.style.background = "#E6EEF0";
+            }}
+            onMouseLeave={(e) => {
+              if (!isSelected) e.currentTarget.style.background = "#F1F5F7";
+            }}
+          >
+            {label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─── Compute visible level columns from the filter ────────────────────────────
+
+function computeVisibleLevels(
+  filter: LevelFilter,
+  compare: Level | "none"
+): Level[] | undefined {
   if (filter === "all") return undefined;
-  const idx = LEVEL_ORDER.indexOf(filter);
-  if (idx === LEVEL_ORDER.length - 1) return [filter];
-  return [filter, LEVEL_ORDER[idx + 1]];
+  if (compare === "none") return [filter];
+  return LEVEL_ORDER.filter((l) => l === filter || l === compare);
 }
 
 // ─── Unified handbook page ────────────────────────────────────────────────────
@@ -210,6 +297,8 @@ interface UnifiedHandbookProps {
   onSelectDiscipline: (id: DisciplineId) => void;
   levelFilter: LevelFilter;
   onSelectLevel: (id: LevelFilter) => void;
+  compare: Level | "none";
+  onSelectCompare: (id: Level | "none") => void;
 }
 
 export function UnifiedHandbook({
@@ -217,12 +306,14 @@ export function UnifiedHandbook({
   onSelectDiscipline,
   levelFilter,
   onSelectLevel,
+  compare,
+  onSelectCompare,
 }: UnifiedHandbookProps) {
   const [sharedCollapsed, setSharedCollapsed] = useState(false);
   const [announcement, setAnnouncement] = useState("");
 
   const data = DISCIPLINES[discipline];
-  const visibleLevels = computeVisibleLevels(levelFilter);
+  const visibleLevels = computeVisibleLevels(levelFilter, compare);
 
   // Announce craft-section and level-filter changes to assistive technology
   useEffect(() => {
@@ -230,11 +321,11 @@ export function UnifiedHandbook({
       levelFilter === "all"
         ? "all levels"
         : (() => {
-            const cols = computeVisibleLevels(levelFilter)!;
+            const cols = computeVisibleLevels(levelFilter, compare)!;
             return cols.map((k) => LEVELS.find((l) => l.key === k)!.label).join(" and ");
           })();
     setAnnouncement(`Now showing ${data.title} craft competencies, ${levelLabel}.`);
-  }, [discipline, levelFilter, data.title]);
+  }, [discipline, levelFilter, compare, data.title]);
 
   const sections: MatrixSection[] = [
     {
@@ -293,7 +384,7 @@ export function UnifiedHandbook({
           }}
         >
           Shared competencies apply to every designer at every level. Craft
-          competencies change by discipline — pick a discipline below to swap the
+          competencies change by discipline. Pick a discipline below to swap the
           lower half of the table. The shared block stays fixed at the top so you
           can compare craft across disciplines.
         </p>
@@ -333,6 +424,28 @@ export function UnifiedHandbook({
           </div>
           <LevelChips value={levelFilter} onChange={onSelectLevel} />
         </div>
+        {levelFilter !== "all" && (
+          <div>
+            <div
+              style={{
+                fontFamily: "var(--font-brand)",
+                fontSize: "11px",
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "#005D1F",
+                marginBottom: "12px",
+              }}
+            >
+              Compare with
+            </div>
+            <CompareChips
+              selected={levelFilter}
+              value={compare}
+              onChange={onSelectCompare}
+            />
+          </div>
+        )}
       </div>
 
       {/* Divider */}

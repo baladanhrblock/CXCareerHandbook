@@ -20,34 +20,62 @@ function readLevelFilterFromUrl(): "all" | Level {
   return param && (VALID_LEVELS as string[]).includes(param) ? (param as Level) : "all";
 }
 
+function readCompareFromUrl(currentLevel: "all" | Level): Level | "none" {
+  if (currentLevel === "all") return "none";
+  const param = new URLSearchParams(window.location.search).get("compare");
+  return param &&
+    (VALID_LEVELS as string[]).includes(param) &&
+    param !== currentLevel
+    ? (param as Level)
+    : "none";
+}
+
 export default function App() {
   const [route, setRoute] = useState<RouteKey>("welcome");
   const [discipline, setDiscipline] = useState<DisciplineId>(readDisciplineFromUrl);
   const [levelFilter, setLevelFilter] = useState<"all" | Level>(readLevelFilterFromUrl);
+  const [compare, setCompare] = useState<Level | "none">(() =>
+    readCompareFromUrl(readLevelFilterFromUrl())
+  );
 
-  // Reflect the selected discipline and level filter in the URL while on the
-  // handbook page, so a specific view can be shared as a link.
+  // When the level filter changes to equal the compare level, reset compare.
+  useEffect(() => {
+    if (compare !== "none" && compare === levelFilter) {
+      setCompare("none");
+    }
+  }, [levelFilter]);
+
+  // Reflect the selected discipline, level filter, and compare in the URL while
+  // on the handbook page, so a specific view can be shared as a link.
   useEffect(() => {
     if (route !== "handbook") return;
     const params = new URLSearchParams(window.location.search);
     params.set("discipline", discipline);
     if (levelFilter === "all") {
       params.delete("levels");
+      params.delete("compare");
     } else {
       params.set("levels", levelFilter);
+      if (compare === "none") {
+        params.delete("compare");
+      } else {
+        params.set("compare", compare);
+      }
     }
     window.history.replaceState(
       null,
       "",
       `${window.location.pathname}?${params.toString()}`
     );
-  }, [route, discipline, levelFilter]);
+  }, [route, discipline, levelFilter, compare]);
 
   // Keep selections in sync with back/forward navigation.
   useEffect(() => {
     function onPop() {
+      const lf = readLevelFilterFromUrl();
       setDiscipline(readDisciplineFromUrl());
-      setLevelFilter(readLevelFilterFromUrl());
+      setLevelFilter(lf);
+      setCompare(readCompareFromUrl(lf));
     }
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
@@ -70,7 +98,15 @@ export default function App() {
 
   function renderContent() {
     if (route === "welcome") {
-      return <WelcomeScreen onNavigate={handleNavigate} />;
+      return (
+        <WelcomeScreen
+          onNavigate={handleNavigate}
+          onOpenHandbookAtLevel={(level) => {
+            setLevelFilter(level);
+            setRoute("handbook");
+          }}
+        />
+      );
     }
     if (route === "handbook") {
       return (
@@ -79,6 +115,8 @@ export default function App() {
           onSelectDiscipline={handleSelectDiscipline}
           levelFilter={levelFilter}
           onSelectLevel={setLevelFilter}
+          compare={compare}
+          onSelectCompare={setCompare}
         />
       );
     }

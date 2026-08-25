@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, Fragment } from "react";
 import type { MatrixRow, Level } from "../data/sharedCompetencies";
 import { LEVELS } from "../data/sharedCompetencies";
 
-// ─── Side panel ───────────────────────────────────────────────────────────────
+// ─── Side panel — reserved for upcoming per-cell rubric content ───────────────
 
 interface PanelData {
   rowLabel: string;
@@ -47,7 +47,7 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
         ref={ref}
         role="dialog"
         aria-modal="true"
-        aria-label={`${data.rowLabel} — ${data.levelLabel}`}
+        aria-label={`${data.rowLabel}, ${data.levelLabel}`}
         tabIndex={-1}
         style={{
           position: "fixed",
@@ -348,52 +348,29 @@ function MatrixCell({
   row,
   level,
   colSpan,
-  onClick,
 }: {
   row: MatrixRow;
   level: Level;
   colSpan?: number;
-  onClick: () => void;
 }) {
-  const [hovered, setHovered] = useState(false);
   const cell = row.cells[level];
   const isAspirational = !!cell.aspirational;
 
-  const bgBase = row.type === "shared" ? "#D6E5DB" : isAspirational ? "#EDF0F4" : "#F1F5F7";
-  const bgHover = row.type === "shared" ? "#C4D9CB" : isAspirational ? "#E2E7ED" : "#E8EEF1";
-
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      onClick();
-    }
-  }
+  const bg = row.type === "shared" ? "#D6E5DB" : isAspirational ? "#EDF0F4" : "#F1F5F7";
 
   return (
     <td
-      onClick={onClick}
-      onKeyDown={handleKeyDown}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      tabIndex={0}
-      role="button"
       colSpan={colSpan}
-      aria-label={`${row.label} — ${level}: ${cell.text}`}
       style={{
         position: "relative",
         padding: "12px 14px",
         verticalAlign: "top",
         borderRight: "1px solid #D4D4D3",
         borderBottom: "1px solid #D4D4D3",
-        background: hovered ? bgHover : bgBase,
-        cursor: "pointer",
-        transition: "background 0.12s",
-        outline: "none",
+        background: bg,
       }}
-      onFocus={(e) => { e.currentTarget.style.boxShadow = "inset 0 0 0 2px #005D1F"; }}
-      onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
     >
-      {isAspirational && !hovered && (
+      {isAspirational && (
         <div
           aria-hidden="true"
           style={{
@@ -475,7 +452,6 @@ export interface CompetencyMatrixProps {
 }
 
 export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels }: CompetencyMatrixProps) {
-  const [panel, setPanel] = useState<PanelData | null>(null);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   const resolvedSections: MatrixSection[] =
@@ -485,20 +461,6 @@ export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels
     ? LEVELS.filter((l) => visibleLevels.includes(l.key))
     : LEVELS;
   const colCount = activeLevels.length + 1;
-
-  function openPanel(row: MatrixRow, level: Level) {
-    const levelMeta = LEVELS.find((l) => l.key === level)!;
-    const cell = row.cells[level];
-    setPanel({
-      rowLabel: row.label,
-      rowDefinition: row.definition,
-      levelLabel: levelMeta.label,
-      text: cell.text,
-      bullets: cell.bullets,
-      provenance: cell.provenance,
-      aspirational: cell.aspirational,
-    });
-  }
 
   return (
     <div>
@@ -655,7 +617,6 @@ export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels
                             key={l.key}
                             row={row}
                             level={l.key}
-                            onClick={() => openPanel(row, l.key)}
                           />
                         ))}
                       </tr>
@@ -667,7 +628,6 @@ export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels
         </table>
       </div>
 
-      {panel && <SidePanel data={panel} onClose={() => setPanel(null)} />}
     </div>
   );
 }
