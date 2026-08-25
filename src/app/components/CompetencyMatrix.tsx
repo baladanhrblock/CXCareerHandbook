@@ -263,12 +263,14 @@ function SectionHeaderRow({
   collapsed,
   onToggle,
   sticky,
+  colCount,
 }: {
   label: string;
   collapsible?: boolean;
   collapsed: boolean;
   onToggle: () => void;
   sticky?: boolean;
+  colCount: number;
 }) {
   const labelStyle: React.CSSProperties = {
     display: "flex",
@@ -285,7 +287,7 @@ function SectionHeaderRow({
   return (
     <tr>
       <td
-        colSpan={LEVELS.length + 1}
+        colSpan={colCount}
         style={{
           padding: 0,
           background: "#5C9770",
@@ -468,14 +470,21 @@ export interface CompetencyMatrixProps {
   sections?: MatrixSection[];
   /** Highlight a specific level column with a "you are here" marker */
   highlightLevel?: Level;
+  /** When present, only render these level columns (in LEVELS order). */
+  visibleLevels?: Level[];
 }
 
-export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyMatrixProps) {
+export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels }: CompetencyMatrixProps) {
   const [panel, setPanel] = useState<PanelData | null>(null);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   const resolvedSections: MatrixSection[] =
     sections ?? [{ id: "__all", label: "", rows: rows ?? [] }];
+
+  const activeLevels = visibleLevels
+    ? LEVELS.filter((l) => visibleLevels.includes(l.key))
+    : LEVELS;
+  const colCount = activeLevels.length + 1;
 
   function openPanel(row: MatrixRow, level: Level) {
     const levelMeta = LEVELS.find((l) => l.key === level)!;
@@ -512,7 +521,7 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
         >
           <colgroup>
             <col style={{ width: "148px" }} />
-            {LEVELS.map((l) => (
+            {activeLevels.map((l) => (
               <col key={l.key} />
             ))}
           </colgroup>
@@ -535,7 +544,7 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
               >
                 Competency
               </th>
-              {LEVELS.map((l) => (
+              {activeLevels.map((l) => (
                 <th
                   key={l.key}
                   style={{
@@ -582,7 +591,7 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
                   {section.preface && (
                     <tr>
                       <td
-                        colSpan={LEVELS.length + 1}
+                        colSpan={colCount}
                         style={{ padding: 0, background: "#F6F4E9" }}
                       >
                         {section.preface}
@@ -595,6 +604,7 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
                       collapsible={section.collapsible}
                       sticky={section.sticky}
                       collapsed={isCollapsed}
+                      colCount={colCount}
                       onToggle={() =>
                         controlled
                           ? section.onToggle!()
@@ -640,25 +650,14 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
                             </div>
                           )}
                         </td>
-                        {(() => {
-                          const tds = [];
-                          let i = 0;
-                          while (i < LEVELS.length) {
-                            const l = LEVELS[i];
-                            const span = row.cells[l.key].span ?? 1;
-                            tds.push(
-                              <MatrixCell
-                                key={l.key}
-                                row={row}
-                                level={l.key}
-                                colSpan={span > 1 ? span : undefined}
-                                onClick={() => openPanel(row, l.key)}
-                              />
-                            );
-                            i += span;
-                          }
-                          return tds;
-                        })()}
+                        {activeLevels.map((l) => (
+                          <MatrixCell
+                            key={l.key}
+                            row={row}
+                            level={l.key}
+                            onClick={() => openPanel(row, l.key)}
+                          />
+                        ))}
                       </tr>
                     ))}
                 </Fragment>

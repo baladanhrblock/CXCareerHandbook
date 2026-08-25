@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Level } from "../data/sharedCompetencies";
-import { LEVELS } from "../data/sharedCompetencies";
+import { LEVELS, SHARED_ROWS } from "../data/sharedCompetencies";
 import { DISCIPLINES } from "../data/disciplines";
 import type { RouteKey } from "./Sidebar";
 

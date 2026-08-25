@@ -109,7 +109,7 @@ const ENTRY_CARDS: {
   route: RouteKey;
 }[] = [
   {
-    title: "Competency Handbook",
+    title: "Career Handbook",
     description:
       "One table for the whole department. Shared competencies apply to everyone at every level; craft competencies swap by discipline — filter to UX Design, Content Design, Service Design, Research, or Experience Strategy.",
     cta: "Open the handbook",

@@ -122,7 +122,7 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
           onClick={() => onNavigate("welcome")}
         />
         <NavItem
-          label="Competency Handbook"
+          label="Career Handbook"
           isActive={active === "handbook"}
           onClick={() => onNavigate("handbook")}
         />

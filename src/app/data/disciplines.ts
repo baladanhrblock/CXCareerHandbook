@@ -70,8 +70,8 @@ const uxDesign: DisciplineData = {
       tag: "UX craft",
       cells: {
         associate: { text: "Uses established interaction patterns and accounts for the main user path and common states.", provenance: "draft" },
-        mid: { text: "Designs complete interaction behavior for a feature, including edge cases, responsive behavior, and accessibility, and applies this rigor to complex or unfamiliar problems across a broad range of devices, contexts, and user needs.", provenance: "draft", span: 2 },
-        senior: { text: "", provenance: "draft" },
+        mid: { text: "Designs complete interaction behavior for a feature, including edge cases, responsive behavior, and accessibility, and applies this rigor to complex or unfamiliar problems across a broad range of devices, contexts, and user needs.", provenance: "draft" },
+        senior: { text: "Designs complete interaction behavior for a feature, including edge cases, responsive behavior, and accessibility, and applies this rigor to complex or unfamiliar problems across a broad range of devices, contexts, and user needs.", provenance: "draft" },
         lead: { text: "Sets interaction standards for a squad and helps raise the quality, consistency, and accessibility of the experience.", provenance: "draft" },
         principal: { text: "Influences interaction design practices across the organization and raises the bar for usability, accessibility, and product quality.", provenance: "draft" },
       },

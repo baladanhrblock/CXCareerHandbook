@@ -271,8 +271,8 @@ export const PRACTICE_ROWS: MatrixRow[] = [
     type: "shared",
     tag: "Department-wide",
     cells: {
-      associate: { text: "Demonstrates and effectively uses the design system for UI construction and identifies gaps when existing patterns do not support the experience.", provenance: "draft", span: 2 },
-      mid: { text: "", provenance: "draft" },
+      associate: { text: "Demonstrates and effectively uses the design system for UI construction and identifies gaps when existing patterns do not support the experience.", provenance: "draft" },
+      mid: { text: "Demonstrates and effectively uses the design system for UI construction and identifies gaps when existing patterns do not support the experience.", provenance: "draft" },
       senior: { text: "Creates reusable patterns that solve recurring problems and are adopted beyond their immediate work.", provenance: "draft" },
       lead: { text: "Drives design system consistency across a squad and helps reconcile product needs with system standards.", provenance: "draft" },
       principal: { text: "Shapes the direction of the design system and influences how patterns scale across the organization.", provenance: "draft" },

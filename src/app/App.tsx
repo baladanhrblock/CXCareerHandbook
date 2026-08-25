@@ -5,36 +5,49 @@ import { WelcomeScreen } from "./components/WelcomeScreen";
 import { UnifiedHandbook } from "./components/UnifiedHandbook";
 import { WhereIAmNow } from "./components/WhereIAmNow";
 import { isDisciplineId, type DisciplineId } from "./data/disciplines";
+import type { Level } from "./data/sharedCompetencies";
 import type { RouteKey } from "./components/Sidebar";
+
+const VALID_LEVELS: Level[] = ["associate", "mid", "senior", "lead", "principal"];
 
 function readDisciplineFromUrl(): DisciplineId {
   const param = new URLSearchParams(window.location.search).get("discipline");
   return isDisciplineId(param) ? param : "ux-design";
 }
 
+function readLevelFilterFromUrl(): "all" | Level {
+  const param = new URLSearchParams(window.location.search).get("levels");
+  return param && (VALID_LEVELS as string[]).includes(param) ? (param as Level) : "all";
+}
+
 export default function App() {
   const [route, setRoute] = useState<RouteKey>("welcome");
   const [discipline, setDiscipline] = useState<DisciplineId>(readDisciplineFromUrl);
+  const [levelFilter, setLevelFilter] = useState<"all" | Level>(readLevelFilterFromUrl);
 
-  // Reflect the selected discipline in the URL while on the handbook page, so a
-  // specific view can be shared as a link.
+  // Reflect the selected discipline and level filter in the URL while on the
+  // handbook page, so a specific view can be shared as a link.
   useEffect(() => {
     if (route !== "handbook") return;
     const params = new URLSearchParams(window.location.search);
-    if (params.get("discipline") !== discipline) {
-      params.set("discipline", discipline);
-      window.history.replaceState(
-        null,
-        "",
-        `${window.location.pathname}?${params.toString()}`
-      );
+    params.set("discipline", discipline);
+    if (levelFilter === "all") {
+      params.delete("levels");
+    } else {
+      params.set("levels", levelFilter);
     }
-  }, [route, discipline]);
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}?${params.toString()}`
+    );
+  }, [route, discipline, levelFilter]);
 
-  // Keep selection in sync with back/forward navigation.
+  // Keep selections in sync with back/forward navigation.
   useEffect(() => {
     function onPop() {
       setDiscipline(readDisciplineFromUrl());
+      setLevelFilter(readLevelFilterFromUrl());
     }
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
@@ -64,6 +77,8 @@ export default function App() {
         <UnifiedHandbook
           discipline={discipline}
           onSelectDiscipline={handleSelectDiscipline}
+          levelFilter={levelFilter}
+          onSelectLevel={setLevelFilter}
         />
       );
     }
