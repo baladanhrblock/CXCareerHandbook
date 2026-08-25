@@ -1,37 +1,71 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Sidebar } from "./components/Sidebar";
 import { WelcomeScreen } from "./components/WelcomeScreen";
-import { SharedCompetenciesScreen } from "./components/SharedCompetenciesScreen";
-import { DisciplinePage } from "./components/DisciplinePage";
+import { UnifiedHandbook } from "./components/UnifiedHandbook";
 import { WhereIAmNow } from "./components/WhereIAmNow";
-import { DISCIPLINES } from "./data/disciplines";
+import { isDisciplineId, type DisciplineId } from "./data/disciplines";
 import type { RouteKey } from "./components/Sidebar";
 
-const DISCIPLINE_ROUTES: RouteKey[] = [
-  "ux-design",
-  "research",
-  "content-design",
-  "service-design",
-  "experience-strategy",
-];
+function readDisciplineFromUrl(): DisciplineId {
+  const param = new URLSearchParams(window.location.search).get("discipline");
+  return isDisciplineId(param) ? param : "ux-design";
+}
 
 export default function App() {
   const [route, setRoute] = useState<RouteKey>("welcome");
+  const [discipline, setDiscipline] = useState<DisciplineId>(readDisciplineFromUrl);
+
+  // Reflect the selected discipline in the URL while on the handbook page, so a
+  // specific view can be shared as a link.
+  useEffect(() => {
+    if (route !== "handbook") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("discipline") !== discipline) {
+      params.set("discipline", discipline);
+      window.history.replaceState(
+        null,
+        "",
+        `${window.location.pathname}?${params.toString()}`
+      );
+    }
+  }, [route, discipline]);
+
+  // Keep selection in sync with back/forward navigation.
+  useEffect(() => {
+    function onPop() {
+      setDiscipline(readDisciplineFromUrl());
+    }
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
 
   function handleNavigate(r: RouteKey) {
+    // Requests for a specific discipline (e.g. from Where I Am Now growth
+    // avenues) open the unified handbook with that discipline selected.
+    if (isDisciplineId(r)) {
+      setDiscipline(r);
+      setRoute("handbook");
+      return;
+    }
     setRoute(r);
+  }
+
+  function handleSelectDiscipline(id: DisciplineId) {
+    setDiscipline(id);
   }
 
   function renderContent() {
     if (route === "welcome") {
       return <WelcomeScreen onNavigate={handleNavigate} />;
     }
-    if (route === "shared-competencies") {
-      return <SharedCompetenciesScreen />;
-    }
-    if (DISCIPLINE_ROUTES.includes(route)) {
-      return <DisciplinePage discipline={DISCIPLINES[route]} />;
+    if (route === "handbook") {
+      return (
+        <UnifiedHandbook
+          discipline={discipline}
+          onSelectDiscipline={handleSelectDiscipline}
+        />
+      );
     }
     if (route === "where-i-am-now") {
       return <WhereIAmNow onNavigate={handleNavigate} />;

@@ -262,11 +262,13 @@ function SectionHeaderRow({
   collapsible,
   collapsed,
   onToggle,
+  sticky,
 }: {
   label: string;
   collapsible?: boolean;
   collapsed: boolean;
   onToggle: () => void;
+  sticky?: boolean;
 }) {
   const labelStyle: React.CSSProperties = {
     display: "flex",
@@ -288,6 +290,9 @@ function SectionHeaderRow({
           padding: 0,
           background: "#5C9770",
           borderBottom: "1px solid #D4D4D3",
+          ...(sticky
+            ? { position: "sticky", top: 0, zIndex: 10, boxShadow: "0 1px 0 #D4D4D3" }
+            : null),
         }}
       >
         {collapsible ? (
@@ -442,6 +447,17 @@ export interface MatrixSection {
   label: string;
   /** Collapsible sections can be toggled; expanded by default */
   collapsible?: boolean;
+  /** Sticky section header — stays pinned to the top while its rows scroll */
+  sticky?: boolean;
+  /**
+   * Controlled collapse. When `onToggle` is provided the section is fully
+   * controlled by the parent (via `collapsed`); otherwise the matrix manages
+   * collapse state internally.
+   */
+  collapsed?: boolean;
+  onToggle?: () => void;
+  /** Optional full-width content rendered as a row directly above the header row. */
+  preface?: React.ReactNode;
   rows: MatrixRow[];
 }
 
@@ -557,16 +573,32 @@ export function CompetencyMatrix({ rows, sections, highlightLevel }: CompetencyM
 
           <tbody>
             {resolvedSections.map((section) => {
-              const isCollapsed = !!collapsed[section.id];
+              const controlled = typeof section.onToggle === "function";
+              const isCollapsed = controlled
+                ? !!section.collapsed
+                : !!collapsed[section.id];
               return (
                 <Fragment key={section.id}>
+                  {section.preface && (
+                    <tr>
+                      <td
+                        colSpan={LEVELS.length + 1}
+                        style={{ padding: 0, background: "#F6F4E9" }}
+                      >
+                        {section.preface}
+                      </td>
+                    </tr>
+                  )}
                   {section.label && (
                     <SectionHeaderRow
                       label={section.label}
                       collapsible={section.collapsible}
+                      sticky={section.sticky}
                       collapsed={isCollapsed}
                       onToggle={() =>
-                        setCollapsed((c) => ({ ...c, [section.id]: !c[section.id] }))
+                        controlled
+                          ? section.onToggle!()
+                          : setCollapsed((c) => ({ ...c, [section.id]: !c[section.id] }))
                       }
                     />
                   )}

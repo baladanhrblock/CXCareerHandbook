@@ -109,18 +109,11 @@ const ENTRY_CARDS: {
   route: RouteKey;
 }[] = [
   {
-    title: "Shared Competencies",
+    title: "Competency Handbook",
     description:
-      "The seven competencies expected of every designer, regardless of discipline or level.",
-    cta: "Explore competencies",
-    route: "shared-competencies",
-  },
-  {
-    title: "Browse Disciplines",
-    description:
-      "Dive into the level-by-level expectations for UX Design, Research, Content Design, Service Design, and Experience Strategy.",
-    cta: "Browse disciplines",
-    route: "ux-design",
+      "One table for the whole department. Shared competencies apply to everyone at every level; craft competencies swap by discipline — filter to UX Design, Content Design, Service Design, Research, or Experience Strategy.",
+    cta: "Open the handbook",
+    route: "handbook",
   },
   {
     title: "Where Am I Now?",

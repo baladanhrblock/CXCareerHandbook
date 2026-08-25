@@ -62,7 +62,7 @@ export const LEVELS: { key: Level; label: string; intent: string }[] = [
 // Seven department-wide competencies, ordered by how strongly people leaders
 // weight them when assessing early-career designers.
 
-export const SHARED_ROWS: MatrixRow[] = [
+export const CORE_ROWS: MatrixRow[] = [
   {
     id: "communication",
     label: "Communication",
@@ -260,3 +260,39 @@ export const SHARED_ROWS: MatrixRow[] = [
     },
   },
 ];
+
+// ─── Practice rows (department-wide "Practice" band) ──────────────────────────
+// Moved out of the UX Design craft set — these two now apply to every discipline.
+
+export const PRACTICE_ROWS: MatrixRow[] = [
+  {
+    id: "ux-design-systems",
+    label: "Systems & Ecosystem",
+    type: "shared",
+    tag: "Department-wide",
+    cells: {
+      associate: { text: "Demonstrates and effectively uses the design system for UI construction and identifies gaps when existing patterns do not support the experience.", provenance: "draft", span: 2 },
+      mid: { text: "", provenance: "draft" },
+      senior: { text: "Creates reusable patterns that solve recurring problems and are adopted beyond their immediate work.", provenance: "draft" },
+      lead: { text: "Drives design system consistency across a squad and helps reconcile product needs with system standards.", provenance: "draft" },
+      principal: { text: "Shapes the direction of the design system and influences how patterns scale across the organization.", provenance: "draft" },
+    },
+  },
+  {
+    id: "ux-innovation-emerging",
+    label: "Innovation & Emerging Technologies",
+    type: "shared",
+    tag: "Department-wide",
+    cells: {
+      associate: { text: "Aware of new tools, patterns, and technologies and applies relevant learnings to their own work.", provenance: "draft" },
+      mid: { text: "Tests new approaches when appropriate and integrates useful tools into their design practice with good judgment.", provenance: "draft" },
+      senior: { text: "Experiments with new methods or technologies and helps teams understand how they might improve the user experience.", provenance: "draft" },
+      lead: { text: "Guides where a squad should experiment, helps manage risk, and turns learnings into practical improvements.", provenance: "draft" },
+      principal: { text: "Anticipates shifts in how experiences are designed and helps the organization prepare for new ways of working.", provenance: "draft" },
+    },
+  },
+];
+
+// Combined shared block (Core behaviours + Practice) — consumed anywhere that
+// needs "everything that applies to every designer" (e.g. Where I Am Now).
+export const SHARED_ROWS: MatrixRow[] = [...CORE_ROWS, ...PRACTICE_ROWS];

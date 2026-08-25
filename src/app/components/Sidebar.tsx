@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
-
+// Discipline ids remain part of the route union so that other flows (e.g. the
+// "Where I Am Now" growth avenues) can request a discipline; App routes those
+// to the unified handbook with the matching discipline selected.
 export type RouteKey =
   | "welcome"
-  | "shared-competencies"
+  | "handbook"
   | "ux-design"
   | "research"
   | "content-design"
@@ -15,16 +15,6 @@ interface SidebarProps {
   active: RouteKey;
   onNavigate: (route: RouteKey) => void;
 }
-
-const DISCIPLINES: { key: RouteKey; label: string }[] = [
-  { key: "ux-design", label: "UX Design" },
-  { key: "research", label: "Research" },
-  { key: "content-design", label: "Content Design" },
-  { key: "service-design", label: "Service Design" },
-  { key: "experience-strategy", label: "Experience Strategy" },
-];
-
-const DISCIPLINE_KEYS: RouteKey[] = DISCIPLINES.map((d) => d.key);
 
 function NavItem({
   label,
@@ -76,12 +66,6 @@ function NavItem({
 }
 
 export function Sidebar({ active, onNavigate }: SidebarProps) {
-  const [disciplinesOpen, setDisciplinesOpen] = useState(
-    DISCIPLINE_KEYS.includes(active)
-  );
-
-  const isDisciplineActive = DISCIPLINE_KEYS.includes(active);
-
   return (
     <aside
       style={{
@@ -138,52 +122,10 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
           onClick={() => onNavigate("welcome")}
         />
         <NavItem
-          label="Shared Competencies"
-          isActive={active === "shared-competencies"}
-          onClick={() => onNavigate("shared-competencies")}
+          label="Competency Handbook"
+          isActive={active === "handbook"}
+          onClick={() => onNavigate("handbook")}
         />
-
-        {/* Disciplines group */}
-        <button
-          onClick={() => setDisciplinesOpen((o) => !o)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-            padding: "10px 20px",
-            background: "none",
-            borderTop: "none",
-            borderRight: "none",
-            borderBottom: "none",
-            borderLeft: isDisciplineActive
-              ? "3px solid #00E95C"
-              : "3px solid transparent",
-            cursor: "pointer",
-            fontFamily: "var(--font-brand)",
-            fontSize: "14px",
-            fontWeight: isDisciplineActive ? 700 : 400,
-            color: isDisciplineActive ? "#005D1F" : "#262626",
-          }}
-        >
-          <span>Disciplines</span>
-          {disciplinesOpen ? (
-            <ChevronDown size={14} color="#6E6E6E" />
-          ) : (
-            <ChevronRight size={14} color="#6E6E6E" />
-          )}
-        </button>
-
-        {disciplinesOpen &&
-          DISCIPLINES.map((d) => (
-            <NavItem
-              key={d.key}
-              label={d.label}
-              isActive={active === d.key}
-              onClick={() => onNavigate(d.key)}
-              indent
-            />
-          ))}
 
         <NavItem
           label="Where I Am Now"
