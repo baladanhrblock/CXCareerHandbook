@@ -348,10 +348,12 @@ function MatrixCell({
   row,
   level,
   colSpan,
+  singleLevel,
 }: {
   row: MatrixRow;
   level: Level;
   colSpan?: number;
+  singleLevel?: boolean;
 }) {
   const cell = row.cells[level];
   const isAspirational = !!cell.aspirational;
@@ -382,7 +384,7 @@ function MatrixCell({
         />
       )}
       {cell.bullets && cell.bullets.length > 0 ? (
-        <ul style={{ margin: 0, padding: "0 0 0 14px", position: "relative" }}>
+        <ul style={{ margin: 0, padding: "0 0 0 14px", position: "relative", maxWidth: singleLevel ? "70ch" : undefined }}>
           {cell.bullets.map((b, i) => (
             <li
               key={i}
@@ -409,6 +411,7 @@ function MatrixCell({
             lineHeight: 1.55,
             display: "block",
             position: "relative",
+            maxWidth: singleLevel ? "70ch" : undefined,
           }}
         >
           {cell.text}
@@ -461,6 +464,7 @@ export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels
     ? LEVELS.filter((l) => visibleLevels.includes(l.key))
     : LEVELS;
   const colCount = activeLevels.length + 1;
+  const isSingleLevel = activeLevels.length === 1;
 
   return (
     <div>
@@ -470,7 +474,7 @@ export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels
           overflowX: "auto",
           borderRadius: "6px",
           border: "1px solid #D4D4D3",
-          maxWidth: "100%",
+          maxWidth: isSingleLevel ? "920px" : "100%",
         }}
       >
         <table
@@ -617,6 +621,7 @@ export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels
                             key={l.key}
                             row={row}
                             level={l.key}
+                            singleLevel={isSingleLevel}
                           />
                         ))}
                       </tr>

@@ -330,7 +330,7 @@ function AssessStep({
               maxWidth: "540px",
             }}
           >
-            {unmarkedCount} {unmarkedCount === 1 ? "competency is" : "competencies are"} unmarked and will appear as Not marked in the PDF. Continue?
+            {unmarkedCount} {unmarkedCount === 1 ? "competency is" : "competencies are"} unmarked and will appear as Not assessed in the PDF. Continue?
           </p>
           <div style={{ display: "flex", gap: "12px" }}>
             <button onClick={() => setConfirmingUnmarked(false)} style={navButtonBase}>
@@ -808,7 +808,7 @@ function ReflectionCard({
         style={{
           fontFamily: "var(--font-brand)",
           fontSize: "14px",
-          fontWeight: question.provenance === "draft" ? 700 : 400,
+          fontWeight: 400,
           color: "#003512",
           lineHeight: 1.5,
           margin: "0 0 10px",
@@ -1032,8 +1032,8 @@ function SummaryStep({
     : PRIMARY_QUESTIONS;
 
   function ratingLabel(r: Rating | null): string {
-    if (!r) return "Not marked";
-    return RATING_OPTIONS.find((o) => o.id === r)?.label ?? "Not marked";
+    if (!r) return "Not assessed";
+    return RATING_OPTIONS.find((o) => o.id === r)?.label ?? "Not assessed";
   }
 
   function ratingColor(r: Rating | null): string {
@@ -1059,7 +1059,18 @@ function SummaryStep({
         style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "32px" }}
       >
         <button
-          onClick={() => window.print()}
+          onClick={() => {
+            const prev = document.title;
+            const nameForTitle = mode === "self" ? selfName.trim() : memberName.trim();
+            const typeLabel = mode === "self" ? "Self Assessment" : "Manager Assessment";
+            document.title = `${nameForTitle} - ${typeLabel} - ${date}`;
+            const onAfterPrint = () => {
+              document.title = prev;
+              window.removeEventListener("afterprint", onAfterPrint);
+            };
+            window.addEventListener("afterprint", onAfterPrint);
+            window.print();
+          }}
           onMouseEnter={(e) => { e.currentTarget.style.background = "#003512"; }}
           onMouseLeave={(e) => { e.currentTarget.style.background = "#005D1F"; }}
           style={{
@@ -1111,21 +1122,20 @@ function SummaryStep({
           >
             {mode === "self" ? "Self-assessment" : "Manager assessment"}
           </h2>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "2px 40px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", columnGap: "32px", rowGap: "6px" }}>
             {metaItems.map(({ label, value }) => (
               <div
                 key={label}
                 style={{
-                  display: "flex",
+                  display: "inline-flex",
+                  alignItems: "baseline",
                   gap: "8px",
                   fontFamily: "var(--font-brand)",
                   fontSize: "14px",
                 }}
               >
-                <span style={{ fontWeight: 700, color: "#003512", minWidth: "104px" }}>
-                  {label}:
-                </span>
-                <span style={{ color: "#262626" }}>{value}</span>
+                <span style={{ fontWeight: 700, color: "#003512" }}>{label}:</span>
+                <span style={{ fontWeight: 400, color: "#262626" }}>{value}</span>
               </div>
             ))}
           </div>
@@ -1173,7 +1183,7 @@ function SummaryStep({
                   borderLeft: "1px solid rgba(255,255,255,0.1)",
                 }}
               >
-                Mark
+                Assessment
               </th>
             </tr>
           </thead>
@@ -1239,12 +1249,12 @@ function SummaryStep({
               {allReflectionQuestions.map((q) => {
                 const notes = reflectionNotes[q.id];
                 return (
-                  <div key={q.id}>
+                  <div key={q.id} style={{ pageBreakInside: "avoid" }}>
                     <p
                       style={{
                         fontFamily: "var(--font-brand)",
                         fontSize: "13px",
-                        fontWeight: q.provenance === "draft" ? 700 : 400,
+                        fontWeight: 400,
                         color: "#003512",
                         margin: "0 0 6px",
                       }}
@@ -1413,7 +1423,7 @@ function AdvanceDelta({ disciplineId, level }: { disciplineId: string; level: Le
               const rowBg = isShared ? "#D6E5DB" : "#F1F5F7";
 
               return (
-                <tr key={row.id}>
+                <tr key={row.id} style={{ pageBreakInside: "avoid" }}>
                   <td
                     style={{
                       padding: "11px 14px",
@@ -1436,7 +1446,7 @@ function AdvanceDelta({ disciplineId, level }: { disciplineId: string; level: Le
                       verticalAlign: "top",
                     }}
                   >
-                    <span style={{ fontFamily: "var(--font-brand)", fontSize: "12px", fontWeight: currCell.provenance === "draft" ? 700 : 400, color: "#6E6E6E", lineHeight: 1.5 }}>
+                    <span style={{ fontFamily: "var(--font-brand)", fontSize: "12px", fontWeight: 400, color: "#6E6E6E", lineHeight: 1.5 }}>
                       {currCell.text}
                     </span>
                   </td>
@@ -1448,7 +1458,7 @@ function AdvanceDelta({ disciplineId, level }: { disciplineId: string; level: Le
                       verticalAlign: "top",
                     }}
                   >
-                    <span style={{ fontFamily: "var(--font-brand)", fontSize: "12px", fontWeight: nextCell.provenance === "draft" ? 700 : 400, color: "#262626", lineHeight: 1.5 }}>
+                    <span style={{ fontFamily: "var(--font-brand)", fontSize: "12px", fontWeight: 400, color: "#262626", lineHeight: 1.5 }}>
                       {nextCell.text}
                     </span>
                   </td>

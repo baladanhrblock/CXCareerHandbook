@@ -194,91 +194,6 @@ function LevelChips({
 
 const LEVEL_ORDER: Level[] = ["associate", "mid", "senior", "lead", "principal"];
 
-// ─── Compare-with chips (radiogroup) ─────────────────────────────────────────
-
-function CompareChips({
-  selected,
-  value,
-  onChange,
-}: {
-  selected: Level;
-  value: Level | "none";
-  onChange: (id: Level | "none") => void;
-}) {
-  const options: { id: Level | "none"; label: string }[] = [
-    { id: "none", label: "None" },
-    ...LEVEL_ORDER.filter((l) => l !== selected).map((l) => ({
-      id: l as Level | "none",
-      label: LEVELS.find((lv) => lv.key === l)!.label,
-    })),
-  ];
-  const refs = useRef<Record<string, HTMLButtonElement | null>>({});
-
-  function handleKeyDown(e: React.KeyboardEvent, index: number) {
-    let nextIndex: number | null = null;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      nextIndex = (index + 1) % options.length;
-    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      nextIndex = (index - 1 + options.length) % options.length;
-    } else if (e.key === "Home") {
-      nextIndex = 0;
-    } else if (e.key === "End") {
-      nextIndex = options.length - 1;
-    }
-    if (nextIndex !== null) {
-      e.preventDefault();
-      const nextId = options[nextIndex].id;
-      onChange(nextId);
-      refs.current[nextId]?.focus();
-    }
-  }
-
-  return (
-    <div
-      role="radiogroup"
-      aria-label="Compare with level"
-      style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}
-    >
-      {options.map(({ id, label }, index) => {
-        const isSelected = id === value;
-        return (
-          <button
-            key={id}
-            ref={(el) => { refs.current[id] = el; }}
-            type="button"
-            role="radio"
-            aria-checked={isSelected}
-            tabIndex={isSelected ? 0 : -1}
-            onClick={() => onChange(id)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
-            style={{
-              padding: "8px 16px",
-              borderRadius: "20px",
-              fontFamily: "var(--font-brand)",
-              fontSize: "13px",
-              fontWeight: isSelected ? 700 : 400,
-              letterSpacing: "0.01em",
-              cursor: "pointer",
-              background: isSelected ? "#003512" : "#F1F5F7",
-              color: isSelected ? "#FFFFFF" : "#003512",
-              border: isSelected ? "1px solid #003512" : "1px solid #D6E5DB",
-              transition: "background 0.12s, color 0.12s, border-color 0.12s",
-            }}
-            onMouseEnter={(e) => {
-              if (!isSelected) e.currentTarget.style.background = "#E6EEF0";
-            }}
-            onMouseLeave={(e) => {
-              if (!isSelected) e.currentTarget.style.background = "#F1F5F7";
-            }}
-          >
-            {label}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 // ─── Compute visible level columns from the filter ────────────────────────────
 
 function computeVisibleLevels(
@@ -422,30 +337,54 @@ export function UnifiedHandbook({
           >
             Level
           </div>
-          <LevelChips value={levelFilter} onChange={onSelectLevel} />
-        </div>
-        {levelFilter !== "all" && (
-          <div>
-            <div
-              style={{
-                fontFamily: "var(--font-brand)",
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "#005D1F",
-                marginBottom: "12px",
-              }}
-            >
-              Compare with
-            </div>
-            <CompareChips
-              selected={levelFilter}
-              value={compare}
-              onChange={onSelectCompare}
-            />
+          <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "nowrap" }}>
+            <LevelChips value={levelFilter} onChange={onSelectLevel} />
+            {levelFilter !== "all" && (
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+                <span
+                  style={{
+                    fontFamily: "var(--font-brand)",
+                    fontSize: "11px",
+                    fontWeight: 700,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: "#9FA4AA",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Compare with
+                </span>
+                <select
+                  aria-label="Compare with level"
+                  value={compare}
+                  onChange={(e) => onSelectCompare(e.target.value as Level | "none")}
+                  style={{
+                    height: "36px",
+                    padding: "0 12px",
+                    border: "1px solid #D4D4D3",
+                    borderRadius: "8px",
+                    fontFamily: "var(--font-brand)",
+                    fontSize: "13px",
+                    fontWeight: 400,
+                    color: "#262626",
+                    background: "#FFFFFF",
+                    cursor: "pointer",
+                    outline: "none",
+                  }}
+                  onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #005D1F"; }}
+                  onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+                >
+                  <option value="none">None</option>
+                  {LEVEL_ORDER.filter((l) => l !== levelFilter).map((l) => (
+                    <option key={l} value={l}>
+                      {LEVELS.find((lv) => lv.key === l)!.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Divider */}

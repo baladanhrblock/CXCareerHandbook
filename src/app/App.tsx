@@ -146,6 +146,7 @@ export default function App() {
       `}</style>
 
       <div
+        className="app-shell"
         style={{
           display: "flex",
           height: "100vh",
@@ -161,6 +162,7 @@ export default function App() {
 
         {/* Main area */}
         <div
+          className="app-main-wrap"
           style={{
             flex: 1,
             display: "flex",
@@ -187,39 +189,6 @@ export default function App() {
             </AnimatePresence>
           </main>
 
-          {/* Persistent footer */}
-          <footer
-            className="no-print"
-            style={{
-              borderTop: "1px solid #D4D4D3",
-              padding: "10px 64px",
-              background: "#F6F4E9",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexShrink: 0,
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--font-brand)",
-                fontSize: "11px",
-                color: "#9FA4AA",
-                letterSpacing: "0.02em",
-              }}
-            >
-              Draft proof of concept · <strong style={{ fontWeight: 700 }}>bold text</strong> is unverified
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-brand)",
-                fontSize: "11px",
-                color: "#D6DAE0",
-              }}
-            >
-              Design Career Handbook · Internal only
-            </span>
-          </footer>
         </div>
       </div>
     </>

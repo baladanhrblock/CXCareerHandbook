@@ -140,8 +140,17 @@
 
 /* ─── Print styles for Where I Am Now assessment export ──────────────────── */
 @media print {
+  /* Unclip the full app shell so the summary paginates freely */
+  .app-shell,
+  .app-main-wrap {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
   /* Remove scroll clipping so the full summary renders */
   #main-content {
+    display: block !important;
     overflow: visible !important;
     height: auto !important;
   }
@@ -188,6 +197,17 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  #root {
+    height: 100%;
+    overflow: hidden;
   }
 
   body {
