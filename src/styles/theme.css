@@ -140,6 +140,13 @@
 
 /* ─── Print styles for Where I Am Now assessment export ──────────────────── */
 @media print {
+  html,
+  body,
+  #root {
+    height: auto !important;
+    overflow: visible !important;
+  }
+
   /* Unclip the full app shell so the summary paginates freely */
   .app-shell,
   .app-main-wrap {
