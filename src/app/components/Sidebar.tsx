@@ -5,11 +5,12 @@ export type RouteKey =
   | "welcome"
   | "handbook"
   | "ux-design"
-  | "research"
   | "content-design"
   | "service-design"
-  | "experience-strategy"
-  | "where-i-am-now";
+  | "where-i-am-now"
+  | "how-levels-work"
+  | "career-paths"
+  | "growing-your-career";
 
 interface SidebarProps {
   active: RouteKey;
@@ -91,7 +92,7 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
         <div
           style={{
             fontFamily: "var(--font-brand)",
-            fontSize: "11px",
+            fontSize: "12px",
             fontWeight: 700,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
@@ -103,7 +104,7 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
         <div
           style={{
             fontFamily: "var(--font-brand)",
-            fontSize: "11px",
+            fontSize: "12px",
             fontWeight: 700,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
@@ -122,15 +123,29 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
           onClick={() => onNavigate("welcome")}
         />
         <NavItem
+          label="How levels work"
+          isActive={active === "how-levels-work"}
+          onClick={() => onNavigate("how-levels-work")}
+        />
+        <NavItem
+          label="Career paths"
+          isActive={active === "career-paths"}
+          onClick={() => onNavigate("career-paths")}
+        />
+        <NavItem
           label="Career Handbook"
           isActive={active === "handbook"}
           onClick={() => onNavigate("handbook")}
         />
-
         <NavItem
           label="Where I Am Now"
           isActive={active === "where-i-am-now"}
           onClick={() => onNavigate("where-i-am-now")}
+        />
+        <NavItem
+          label="Growing your career"
+          isActive={active === "growing-your-career"}
+          onClick={() => onNavigate("growing-your-career")}
         />
       </nav>
 
@@ -140,8 +155,8 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
           padding: "20px",
           borderTop: "1px solid #D4D4D3",
           fontFamily: "var(--font-brand)",
-          fontSize: "11px",
-          color: "#9FA4AA",
+          fontSize: "12px",
+          color: "#595854",
         }}
       >
         Internal use only · Design Dept

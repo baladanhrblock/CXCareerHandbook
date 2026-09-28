@@ -2,6 +2,25 @@ import { useState } from "react";
 import { LEVELS, type Level } from "../data/sharedCompetencies";
 import type { RouteKey } from "./Sidebar";
 
+// ─── Section heading ──────────────────────────────────────────────────────────
+
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2
+      style={{
+        fontFamily: "var(--font-brand)",
+        fontSize: "18px",
+        fontWeight: 700,
+        color: "#003512",
+        letterSpacing: "0.04em",
+        margin: "0 0 10px",
+      }}
+    >
+      {children}
+    </h2>
+  );
+}
+
 interface WelcomeScreenProps {
   onNavigate: (route: RouteKey) => void;
   onOpenHandbookAtLevel: (level: Level) => void;
@@ -24,7 +43,7 @@ export function WelcomeScreen({ onNavigate, onOpenHandbookAtLevel }: WelcomeScre
             marginBottom: "16px",
           }}
         >
-          Career Handbook
+          Design Career Handbook
         </h1>
         <p
           style={{
@@ -36,7 +55,7 @@ export function WelcomeScreen({ onNavigate, onOpenHandbookAtLevel }: WelcomeScre
             margin: 0,
           }}
         >
-          How designers grow at Block: what we expect at every level, and how to see where you are.
+          How designers grow at Block: what is expected at every level, and how each designer can find where they are today.
         </p>
       </div>
 
@@ -52,15 +71,15 @@ export function WelcomeScreen({ onNavigate, onOpenHandbookAtLevel }: WelcomeScre
             color: "#FFFFFF",
             background: "#005D1F",
             border: "2px solid #005D1F",
-            borderRadius: "6px",
+            borderRadius: "8px",
             padding: "12px 24px",
             cursor: "pointer",
             letterSpacing: "0.01em",
             transition: "background 0.12s, border-color 0.12s",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#004A18";
-            e.currentTarget.style.borderColor = "#004A18";
+            e.currentTarget.style.background = "#003512";
+            e.currentTarget.style.borderColor = "#003512";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "#005D1F";
@@ -79,7 +98,7 @@ export function WelcomeScreen({ onNavigate, onOpenHandbookAtLevel }: WelcomeScre
             color: "#005D1F",
             background: "transparent",
             border: "2px solid #005D1F",
-            borderRadius: "6px",
+            borderRadius: "8px",
             padding: "12px 24px",
             cursor: "pointer",
             letterSpacing: "0.01em",
@@ -99,37 +118,173 @@ export function WelcomeScreen({ onNavigate, onOpenHandbookAtLevel }: WelcomeScre
       {/* Level spine */}
       <LevelSpine onOpenHandbookAtLevel={onOpenHandbookAtLevel} />
 
-      {/* Body copy */}
+      {/* Intro paragraph */}
       <p
         style={{
           fontFamily: "var(--font-brand)",
-          fontSize: "15px",
+          fontSize: "16px",
           fontWeight: 400,
           color: "#262626",
-          lineHeight: 1.7,
+          lineHeight: 1.6,
           maxWidth: "620px",
-          margin: "0 0 32px",
+          margin: "0 0 40px",
         }}
       >
-        Nine shared competencies apply to every designer, at every level. Each discipline adds its own craft competencies below them.
+        This handbook brings clarity to career development. It is a career-building guide, not a checklist, and works best as a reference and a starting point for conversations between designers and their managers.
       </p>
 
-      {/* Closing note */}
+      {/* Growth takes many forms */}
+      <div style={{ maxWidth: "620px", marginBottom: "40px" }}>
+        <SectionHeading>Growth takes many forms</SectionHeading>
+        <p
+          style={{
+            fontFamily: "var(--font-brand)",
+            fontSize: "16px",
+            fontWeight: 400,
+            color: "#262626",
+            lineHeight: 1.6,
+            margin: 0,
+          }}
+        >
+          Growth is not only upward, and it does not have to lead to management. It can mean deepening craft at the current level, moving up the individual contributor (IC) or manager path, or moving between the two.
+        </p>
+      </div>
+
+      {/* How to use this handbook */}
+      <div style={{ marginBottom: "40px" }}>
+        <SectionHeading>How to use this handbook</SectionHeading>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            gap: "12px",
+            maxWidth: "620px",
+          }}
+        >
+          {[
+            { num: "1", title: "Where am I now?", body: "Assess current skills against the expectations for the level.", route: "where-i-am-now" as RouteKey },
+            { num: "2", title: "Where do I want to be?", body: "Explore the levels and paths available.", route: "how-levels-work" as RouteKey },
+            { num: "3", title: "How do I get there?", body: "Build a development plan together with a manager.", route: "growing-your-career" as RouteKey },
+            { num: "4", title: "How am I doing?", body: "Revisit the self-assessment each quarter and track progress.", route: "where-i-am-now" as RouteKey },
+          ].map(({ num, title, body, route }) => (
+            <HowToCard
+              key={num}
+              num={num}
+              title={title}
+              body={body}
+              onClick={() => onNavigate(route)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* What's covered */}
+      <div style={{ maxWidth: "620px", marginBottom: "32px" }}>
+        <SectionHeading>{"What's covered"}</SectionHeading>
+        <p
+          style={{
+            fontFamily: "var(--font-brand)",
+            fontSize: "16px",
+            fontWeight: 400,
+            color: "#262626",
+            lineHeight: 1.6,
+            margin: 0,
+          }}
+        >
+          The handbook covers UX Design, Content Design, and Service Design, along with the manager path. Nine shared competencies apply to every individual contributor, and each discipline adds its own craft competencies. Managers are assessed on a separate set of manager competencies. Research and Experience Strategy will be added in a future update.
+        </p>
+      </div>
+
+      {/* Footer note */}
       <p
         style={{
           fontFamily: "var(--font-brand)",
-          fontSize: "14px",
+          fontSize: "13px",
           fontWeight: 400,
-          color: "#6E6E6E",
+          color: "#595854",
           lineHeight: 1.7,
           maxWidth: "620px",
           margin: 0,
         }}
       >
-        This is a career-building guide, not a checklist. Growth is not only upward: it can mean deepening at your level, moving up, or moving between the individual contributor and manager paths. A promotion also requires a business need.
+        A promotion requires both readiness and a business need. Questions about this handbook go to each designer{"'"}s manager.
       </p>
 
     </div>
+  );
+}
+
+// ─── How-to card ─────────────────────────────────────────────────────────────
+
+function HowToCard({
+  num,
+  title,
+  body,
+  onClick,
+}: {
+  num: string;
+  title: string;
+  body: string;
+  onClick: () => void;
+}) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #0073C5"; }}
+      onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        padding: "16px 18px",
+        background: "#FFFFFF",
+        border: `1px solid ${hovered ? "#005D1F" : "#D4D4D3"}`,
+        borderRadius: "8px",
+        cursor: "pointer",
+        textAlign: "left",
+        transition: "border-color 0.12s",
+        outline: "none",
+        fontFamily: "var(--font-brand)",
+      }}
+    >
+      <span
+        style={{
+          fontSize: "12px",
+          fontWeight: 700,
+          letterSpacing: "0.1em",
+          color: "#595854",
+          marginBottom: "6px",
+        }}
+      >
+        {num}
+      </span>
+      <span
+        style={{
+          fontSize: "14px",
+          fontWeight: 700,
+          color: "#003512",
+          lineHeight: 1.3,
+          marginBottom: "6px",
+        }}
+      >
+        {title}
+      </span>
+      <span
+        style={{
+          fontSize: "13px",
+          fontWeight: 400,
+          color: "#595854",
+          lineHeight: 1.55,
+        }}
+      >
+        {body}
+      </span>
+    </button>
   );
 }
 
@@ -231,7 +386,7 @@ function LevelSpine({ onOpenHandbookAtLevel }: { onOpenHandbookAtLevel: (level: 
                       transform: isHovered ? "scale(1.35)" : "scale(1)",
                       outline: "none",
                     }}
-                    onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 3px rgba(0,93,31,0.25)"; }}
+                    onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #0073C5"; }}
                     onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
                   />
                   {/* Right half-line (hidden for last item) */}
@@ -292,7 +447,7 @@ function LevelSpine({ onOpenHandbookAtLevel }: { onOpenHandbookAtLevel: (level: 
                   style={{
                     fontSize: "13px",
                     fontWeight: 400,
-                    color: isHovered ? "#005D1F" : "#6E6E6E",
+                    color: isHovered ? "#005D1F" : "#595854",
                     lineHeight: 1.5,
                     maxWidth: "180px",
                     transition: "color 0.12s",

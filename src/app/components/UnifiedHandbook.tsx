@@ -77,7 +77,7 @@ function DisciplineChips({
             onKeyDown={(e) => handleKeyDown(e, index)}
             style={{
               padding: "8px 16px",
-              borderRadius: "20px",
+              borderRadius: "999px",
               fontFamily: "var(--font-brand)",
               fontSize: "13px",
               fontWeight: selected ? 700 : 400,
@@ -89,7 +89,7 @@ function DisciplineChips({
               transition: "background 0.12s, color 0.12s, border-color 0.12s",
             }}
             onMouseEnter={(e) => {
-              if (!selected) e.currentTarget.style.background = "#E6EEF0";
+              if (!selected) e.currentTarget.style.background = "#E8EEF1";
             }}
             onMouseLeave={(e) => {
               if (!selected) e.currentTarget.style.background = "#F1F5F7";
@@ -119,26 +119,29 @@ const LEVEL_OPTIONS: { id: LevelFilter; label: string }[] = [
 function LevelChips({
   value,
   onChange,
+  options,
 }: {
   value: LevelFilter;
   onChange: (id: LevelFilter) => void;
+  options?: { id: LevelFilter; label: string }[];
 }) {
+  const opts = options ?? LEVEL_OPTIONS;
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   function handleKeyDown(e: React.KeyboardEvent, index: number) {
     let nextIndex: number | null = null;
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      nextIndex = (index + 1) % LEVEL_OPTIONS.length;
+      nextIndex = (index + 1) % opts.length;
     } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      nextIndex = (index - 1 + LEVEL_OPTIONS.length) % LEVEL_OPTIONS.length;
+      nextIndex = (index - 1 + opts.length) % opts.length;
     } else if (e.key === "Home") {
       nextIndex = 0;
     } else if (e.key === "End") {
-      nextIndex = LEVEL_OPTIONS.length - 1;
+      nextIndex = opts.length - 1;
     }
     if (nextIndex !== null) {
       e.preventDefault();
-      const nextId = LEVEL_OPTIONS[nextIndex].id;
+      const nextId = opts[nextIndex].id;
       onChange(nextId);
       refs.current[nextId]?.focus();
     }
@@ -150,7 +153,7 @@ function LevelChips({
       aria-label="Filter competency columns by level"
       style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}
     >
-      {LEVEL_OPTIONS.map(({ id, label }, index) => {
+      {opts.map(({ id, label }, index) => {
         const selected = id === value;
         return (
           <button
@@ -166,7 +169,7 @@ function LevelChips({
             onKeyDown={(e) => handleKeyDown(e, index)}
             style={{
               padding: "8px 16px",
-              borderRadius: "20px",
+              borderRadius: "999px",
               fontFamily: "var(--font-brand)",
               fontSize: "13px",
               fontWeight: selected ? 700 : 400,
@@ -178,7 +181,7 @@ function LevelChips({
               transition: "background 0.12s, color 0.12s, border-color 0.12s",
             }}
             onMouseEnter={(e) => {
-              if (!selected) e.currentTarget.style.background = "#E6EEF0";
+              if (!selected) e.currentTarget.style.background = "#E8EEF1";
             }}
             onMouseLeave={(e) => {
               if (!selected) e.currentTarget.style.background = "#F1F5F7";
@@ -198,9 +201,10 @@ const LEVEL_ORDER: Level[] = ["associate", "mid", "senior", "lead", "principal"]
 
 function computeVisibleLevels(
   filter: LevelFilter,
-  compare: Level | "none"
+  compare: Level | "none",
+  availableLevels?: Level[]
 ): Level[] | undefined {
-  if (filter === "all") return undefined;
+  if (filter === "all") return availableLevels;
   if (compare === "none") return [filter];
   return LEVEL_ORDER.filter((l) => l === filter || l === compare);
 }
@@ -228,15 +232,41 @@ export function UnifiedHandbook({
   const [announcement, setAnnouncement] = useState("");
 
   const data = DISCIPLINES[discipline];
-  const visibleLevels = computeVisibleLevels(levelFilter, compare);
+  const availableLevels = data.availableLevels;
+
+  // When discipline changes and the active level is not available, reset to "all"
+  useEffect(() => {
+    if (!availableLevels) return;
+    if (levelFilter !== "all" && !availableLevels.includes(levelFilter as Level)) {
+      onSelectLevel("all");
+      onSelectCompare("none");
+    } else if (compare !== "none" && !availableLevels.includes(compare as Level)) {
+      onSelectCompare("none");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discipline]);
+
+  const effectiveLevelFilter: LevelFilter =
+    availableLevels && levelFilter !== "all" && !availableLevels.includes(levelFilter as Level)
+      ? "all"
+      : levelFilter;
+  const effectiveCompare: Level | "none" =
+    availableLevels && compare !== "none" && !availableLevels.includes(compare as Level)
+      ? "none"
+      : compare;
+  const visibleLevels = computeVisibleLevels(effectiveLevelFilter, effectiveCompare, availableLevels);
+
+  const levelChipOptions = availableLevels
+    ? LEVEL_OPTIONS.filter((opt) => opt.id === "all" || availableLevels.includes(opt.id as Level))
+    : LEVEL_OPTIONS;
 
   // Announce craft-section and level-filter changes to assistive technology
   useEffect(() => {
     const levelLabel =
-      levelFilter === "all"
+      effectiveLevelFilter === "all"
         ? "all levels"
         : (() => {
-            const cols = computeVisibleLevels(levelFilter, compare)!;
+            const cols = computeVisibleLevels(effectiveLevelFilter, effectiveCompare)!;
             return cols.map((k) => LEVELS.find((l) => l.key === k)!.label).join(" and ");
           })();
     setAnnouncement(`Now showing ${data.title} craft competencies, ${levelLabel}.`);
@@ -292,7 +322,7 @@ export function UnifiedHandbook({
             fontFamily: "var(--font-brand)",
             fontSize: "16px",
             fontWeight: 400,
-            color: "#6E6E6E",
+            color: "#595854",
             lineHeight: 1.7,
             maxWidth: "660px",
             margin: 0,
@@ -311,7 +341,7 @@ export function UnifiedHandbook({
           <div
             style={{
               fontFamily: "var(--font-brand)",
-              fontSize: "11px",
+              fontSize: "12px",
               fontWeight: 700,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
@@ -327,7 +357,7 @@ export function UnifiedHandbook({
           <div
             style={{
               fontFamily: "var(--font-brand)",
-              fontSize: "11px",
+              fontSize: "12px",
               fontWeight: 700,
               letterSpacing: "0.12em",
               textTransform: "uppercase",
@@ -338,17 +368,17 @@ export function UnifiedHandbook({
             Level
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "nowrap" }}>
-            <LevelChips value={levelFilter} onChange={onSelectLevel} />
-            {levelFilter !== "all" && (
+            <LevelChips value={effectiveLevelFilter} onChange={onSelectLevel} options={levelChipOptions} />
+            {effectiveLevelFilter !== "all" && (
               <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
                 <span
                   style={{
                     fontFamily: "var(--font-brand)",
-                    fontSize: "11px",
+                    fontSize: "12px",
                     fontWeight: 700,
                     letterSpacing: "0.12em",
                     textTransform: "uppercase",
-                    color: "#9FA4AA",
+                    color: "#595854",
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -356,7 +386,7 @@ export function UnifiedHandbook({
                 </span>
                 <select
                   aria-label="Compare with level"
-                  value={compare}
+                  value={effectiveCompare}
                   onChange={(e) => onSelectCompare(e.target.value as Level | "none")}
                   style={{
                     height: "36px",
@@ -371,11 +401,11 @@ export function UnifiedHandbook({
                     cursor: "pointer",
                     outline: "none",
                   }}
-                  onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #005D1F"; }}
+                  onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #0073C5"; }}
                   onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
                 >
                   <option value="none">None</option>
-                  {LEVEL_ORDER.filter((l) => l !== levelFilter).map((l) => (
+                  {LEVEL_ORDER.filter((l) => l !== effectiveLevelFilter && (!availableLevels || availableLevels.includes(l))).map((l) => (
                     <option key={l} value={l}>
                       {LEVELS.find((lv) => lv.key === l)!.label}
                     </option>
@@ -384,6 +414,11 @@ export function UnifiedHandbook({
               </div>
             )}
           </div>
+          {availableLevels && (
+            <p style={{ fontFamily: "var(--font-brand)", fontSize: "13px", fontWeight: 400, color: "#595854", margin: "8px 0 0" }}>
+              {`${data.title} roles begin at ${LEVELS.find((l) => l.key === availableLevels[0])!.label}.`}
+            </p>
+          )}
         </div>
       </div>
 

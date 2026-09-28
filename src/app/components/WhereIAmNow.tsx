@@ -6,12 +6,10 @@ import type { RouteKey } from "./Sidebar";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const DISCIPLINE_OPTIONS: { id: string; label: string; description: string }[] = [
-  { id: "ux-design", label: "UX Design", description: "Interfaces & product experiences" },
-  { id: "research", label: "Research", description: "Evidence, methods & insight" },
-  { id: "content-design", label: "Content Design", description: "Words, structure & voice" },
-  { id: "service-design", label: "Service Design", description: "End-to-end services & systems" },
-  { id: "experience-strategy", label: "Experience Strategy", description: "Vision, outcomes & portfolio" },
+const DISCIPLINE_OPTIONS: { id: string; label: string }[] = [
+  { id: "ux-design", label: "UX Design" },
+  { id: "content-design", label: "Content Design" },
+  { id: "service-design", label: "Service Design" },
 ];
 
 const LEVEL_OPTIONS: { key: Level; label: string; intent: string }[] = LEVELS;
@@ -44,17 +42,17 @@ function todayIso() {
 type Rating = "developing" | "skilled" | "talented";
 
 const RATING_OPTIONS: { id: Rating; label: string }[] = [
-  { id: "developing", label: "Developing" },
+  { id: "developing", label: "Less skilled" },
   { id: "skilled", label: "Skilled" },
   { id: "talented", label: "Talented" },
 ];
 
 function ratingChipColors(id: Rating, selected: boolean): React.CSSProperties {
   if (!selected) {
-    return { background: "#F1F5F7", color: "#6E6E6E", border: "1px solid #D4D4D3" };
+    return { background: "#F1F5F7", color: "#595854", border: "1px solid #D4D4D3" };
   }
   if (id === "developing") {
-    return { background: "#FFF3CD", color: "#7A5F00", border: "1px solid #F5CC02" };
+    return { background: "#FDF3C2", color: "#262626", border: "1px solid #F5CC02" };
   }
   if (id === "skilled") {
     return { background: "#D6E5DB", color: "#003512", border: "1px solid #5C9770" };
@@ -110,11 +108,11 @@ function RatingChips({
             tabIndex={tabbable ? 0 : -1}
             onClick={() => onChange(selected ? null : id)}
             onKeyDown={(e) => handleKeyDown(e, index)}
-            onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #005D1F"; }}
+            onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #0073C5"; }}
             onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
             style={{
               padding: "5px 12px",
-              borderRadius: "20px",
+              borderRadius: "999px",
               fontFamily: "var(--font-brand)",
               fontSize: "12px",
               fontWeight: selected ? 700 : 400,
@@ -171,23 +169,23 @@ function AssessStep({
     padding: "10px 20px",
     background: "none",
     border: "1px solid #D4D4D3",
-    borderRadius: "6px",
+    borderRadius: "8px",
     fontFamily: "var(--font-brand)",
     fontSize: "13px",
     fontWeight: 400,
-    color: "#6E6E6E",
+    color: "#595854",
     cursor: "pointer",
   };
 
   const continueButtonBase: React.CSSProperties = {
     padding: "12px 28px",
-    background: "#00E95C",
+    background: "#005D1F",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "8px",
     fontFamily: "var(--font-brand)",
     fontSize: "14px",
     fontWeight: 700,
-    color: "#003512",
+    color: "#FFFFFF",
     cursor: "pointer",
     transition: "background 0.12s",
   };
@@ -208,11 +206,11 @@ function AssessStep({
         <div
           style={{
             fontFamily: "var(--font-brand)",
-            fontSize: "11px",
+            fontSize: "12px",
             fontWeight: 700,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
-            color: "#9FA4AA",
+            color: "#595854",
             marginBottom: "10px",
           }}
         >
@@ -220,7 +218,7 @@ function AssessStep({
         </div>
         <dl style={{ margin: 0, display: "flex", flexDirection: "column", gap: "5px" }}>
           {[
-            { term: "Developing", def: "not yet doing this consistently." },
+            { term: "Less skilled", def: "not yet doing this consistently." },
             { term: "Skilled", def: "this describes the work today." },
             { term: "Talented", def: "operating beyond this, toward the next level." },
           ].map(({ term, def }) => (
@@ -241,7 +239,7 @@ function AssessStep({
                   fontFamily: "var(--font-brand)",
                   fontSize: "13px",
                   fontWeight: 400,
-                  color: "#6E6E6E",
+                  color: "#595854",
                   margin: 0,
                 }}
               >
@@ -258,7 +256,7 @@ function AssessStep({
           fontFamily: "var(--font-brand)",
           fontSize: "13px",
           fontWeight: 400,
-          color: markedCount === totalCount ? "#005D1F" : "#6E6E6E",
+          color: markedCount === totalCount ? "#005D1F" : "#595854",
           marginBottom: "16px",
         }}
       >
@@ -270,7 +268,7 @@ function AssessStep({
       <div style={{ display: "flex", flexDirection: "column", gap: "3px", marginBottom: "32px" }}>
         {allRows.map((row) => {
           const isShared = row.type === "shared";
-          const cell = row.cells[level];
+          const cell = row.cells[level]!;
           return (
             <div
               key={row.id}
@@ -301,7 +299,7 @@ function AssessStep({
                     fontFamily: "var(--font-brand)",
                     fontSize: "13px",
                     fontWeight: 400,
-                    color: "#6E6E6E",
+                    color: "#595854",
                     lineHeight: 1.55,
                   }}
                 >
@@ -362,11 +360,11 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
     <div
       style={{
         fontFamily: "var(--font-brand)",
-        fontSize: "11px",
+        fontSize: "12px",
         fontWeight: 700,
         letterSpacing: "0.12em",
         textTransform: "uppercase",
-        color: "#9FA4AA",
+        color: "#595854",
         marginBottom: "12px",
       }}
     >
@@ -414,9 +412,9 @@ function StepIndicator({ steps, activeIndex }: { steps: string[]; activeIndex: n
                   alignItems: "center",
                   justifyContent: "center",
                   fontFamily: "var(--font-brand)",
-                  fontSize: "11px",
+                  fontSize: "12px",
                   fontWeight: 700,
-                  color: isDone ? "#FFFFFF" : isActive ? "#003512" : "#9FA4AA",
+                  color: isDone ? "#FFFFFF" : isActive ? "#003512" : "#595854",
                   flexShrink: 0,
                 }}
               >
@@ -427,7 +425,7 @@ function StepIndicator({ steps, activeIndex }: { steps: string[]; activeIndex: n
                   fontFamily: "var(--font-brand)",
                   fontSize: "13px",
                   fontWeight: isActive ? 700 : 400,
-                  color: isActive ? "#005D1F" : isDone ? "#005D1F" : "#9FA4AA",
+                  color: isActive ? "#005D1F" : isDone ? "#005D1F" : "#595854",
                   whiteSpace: "nowrap",
                 }}
               >
@@ -459,11 +457,13 @@ function SelectionCard({
   description,
   selected,
   onClick,
+  sizing,
 }: {
   label: string;
   description?: string;
   selected: boolean;
   onClick: () => void;
+  sizing?: React.CSSProperties;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -472,7 +472,7 @@ function SelectionCard({
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #005D1F"; }}
+      onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #0073C5"; }}
       onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
       style={{
         display: "flex",
@@ -488,6 +488,7 @@ function SelectionCard({
         fontFamily: "var(--font-brand)",
         outline: "none",
         flex: 1,
+        ...sizing,
       }}
     >
       <span
@@ -503,9 +504,9 @@ function SelectionCard({
       {description && (
         <span
           style={{
-            fontSize: "11px",
+            fontSize: "12px",
             fontWeight: 400,
-            color: selected ? "rgba(255,255,255,0.75)" : "#9FA4AA",
+            color: selected ? "rgba(255,255,255,0.75)" : "#595854",
             marginTop: "3px",
           }}
         >
@@ -538,18 +539,18 @@ function ModeSelect({ onSelect }: { onSelect: (mode: "self" | "manager") => void
   return (
     <div>
       <SectionTitle>Who is this assessment for?</SectionTitle>
-      <div style={{ display: "flex", gap: "16px", marginBottom: "32px" }}>
+      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "32px" }}>
         <SelectionCard
           label="Myself"
-          description="I am assessing my own career level"
           selected={pending === "self"}
           onClick={() => setPending("self")}
+          sizing={{ flex: "0 0 auto", minWidth: "260px", maxWidth: "360px" }}
         />
         <SelectionCard
           label="A team member I manage"
-          description="I am preparing for a conversation with someone I lead"
           selected={pending === "manager"}
           onClick={() => setPending("manager")}
+          sizing={{ flex: "0 0 auto", minWidth: "260px", maxWidth: "360px" }}
         />
       </div>
       <button
@@ -557,13 +558,13 @@ function ModeSelect({ onSelect }: { onSelect: (mode: "self" | "manager") => void
         disabled={!pending}
         style={{
           padding: "12px 28px",
-          background: pending ? "#00E95C" : "#E8EEF1",
+          background: pending ? "#005D1F" : "#D6DAE0",
           border: "none",
-          borderRadius: "6px",
+          borderRadius: "8px",
           fontFamily: "var(--font-brand)",
           fontSize: "14px",
           fontWeight: 700,
-          color: pending ? "#003512" : "#9FA4AA",
+          color: pending ? "#FFFFFF" : "#9FA4AA",
           cursor: pending ? "pointer" : "not-allowed",
           transition: "background 0.12s",
           letterSpacing: "0.02em",
@@ -611,7 +612,7 @@ function TextInput({
         style={{
           padding: "9px 12px",
           border: "1px solid #D4D4D3",
-          borderRadius: "6px",
+          borderRadius: "8px",
           fontFamily: "var(--font-brand)",
           fontSize: "14px",
           fontWeight: 400,
@@ -622,7 +623,7 @@ function TextInput({
           width: "260px",
           boxSizing: "border-box",
         }}
-        onFocus={(e) => { e.currentTarget.style.borderColor = "#005D1F"; }}
+        onFocus={(e) => { e.currentTarget.style.borderColor = "#0073C5"; }}
         onBlur={(e) => { e.currentTarget.style.borderColor = "#D4D4D3"; }}
       />
     </div>
@@ -656,13 +657,18 @@ function SetupStep({
   disciplineId: string | null;
   onDisciplineChange: (id: string) => void;
   level: Level | null;
-  onLevelChange: (l: Level) => void;
+  onLevelChange: (l: Level | null) => void;
   onContinue: () => void;
   onBack: () => void;
 }) {
   const namesFilled =
     selfName.trim() !== "" && (mode === "self" || memberName.trim() !== "");
   const canContinue = namesFilled && disciplineId !== null && level !== null;
+
+  const availableForDiscipline = disciplineId ? DISCIPLINES[disciplineId]?.availableLevels : undefined;
+  const levelOpts = availableForDiscipline
+    ? LEVEL_OPTIONS.filter((l) => availableForDiscipline.includes(l.key))
+    : LEVEL_OPTIONS;
 
   return (
     <div>
@@ -700,9 +706,14 @@ function SetupStep({
             <SelectionCard
               key={d.id}
               label={d.label}
-              description={d.description}
               selected={disciplineId === d.id}
-              onClick={() => onDisciplineChange(d.id)}
+              onClick={() => {
+                const newAvailable = DISCIPLINES[d.id]?.availableLevels;
+                if (newAvailable && level !== null && !newAvailable.includes(level)) {
+                  onLevelChange(null);
+                }
+                onDisciplineChange(d.id);
+              }}
             />
           ))}
         </div>
@@ -714,11 +725,10 @@ function SetupStep({
           {mode === "self" ? "Your current level" : "Their current level"}
         </SectionTitle>
         <div style={{ display: "flex", gap: "10px" }}>
-          {LEVEL_OPTIONS.map((l) => (
+          {levelOpts.map((l) => (
             <SelectionCard
               key={l.key}
               label={l.label}
-              description={l.intent}
               selected={level === l.key}
               onClick={() => onLevelChange(l.key)}
             />
@@ -732,7 +742,7 @@ function SetupStep({
           fontFamily: "var(--font-brand)",
           fontSize: "13px",
           fontWeight: 400,
-          color: "#9FA4AA",
+          color: "#595854",
           lineHeight: 1.6,
           marginBottom: "28px",
           maxWidth: "560px",
@@ -749,11 +759,11 @@ function SetupStep({
             padding: "10px 20px",
             background: "none",
             border: "1px solid #D4D4D3",
-            borderRadius: "6px",
+            borderRadius: "8px",
             fontFamily: "var(--font-brand)",
             fontSize: "13px",
             fontWeight: 400,
-            color: "#6E6E6E",
+            color: "#595854",
             cursor: "pointer",
           }}
         >
@@ -764,13 +774,13 @@ function SetupStep({
           disabled={!canContinue}
           style={{
             padding: "12px 28px",
-            background: canContinue ? "#00E95C" : "#E8EEF1",
+            background: canContinue ? "#005D1F" : "#D6DAE0",
             border: "none",
-            borderRadius: "6px",
+            borderRadius: "8px",
             fontFamily: "var(--font-brand)",
             fontSize: "14px",
             fontWeight: 700,
-            color: canContinue ? "#003512" : "#9FA4AA",
+            color: canContinue ? "#FFFFFF" : "#9FA4AA",
             cursor: canContinue ? "pointer" : "not-allowed",
             transition: "background 0.12s",
             letterSpacing: "0.02em",
@@ -820,11 +830,11 @@ function ReflectionCard({
         style={{
           display: "block",
           fontFamily: "var(--font-brand)",
-          fontSize: "11px",
+          fontSize: "12px",
           fontWeight: 700,
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          color: "#9FA4AA",
+          color: "#595854",
           marginBottom: "6px",
         }}
       >
@@ -839,7 +849,7 @@ function ReflectionCard({
           width: "100%",
           padding: "8px 10px",
           border: "1px solid #D4D4D3",
-          borderRadius: "6px",
+          borderRadius: "8px",
           fontFamily: "var(--font-brand)",
           fontSize: "13px",
           color: "#262626",
@@ -849,7 +859,7 @@ function ReflectionCard({
           outline: "none",
           boxSizing: "border-box",
         }}
-        onFocus={(e) => { e.currentTarget.style.borderColor = "#005D1F"; }}
+        onFocus={(e) => { e.currentTarget.style.borderColor = "#0073C5"; }}
         onBlur={(e) => { e.currentTarget.style.borderColor = "#D4D4D3"; }}
       />
     </div>
@@ -891,7 +901,7 @@ function ReflectStep({
         role="switch"
         aria-checked={advancementGoal}
         onClick={onToggleAdvancement}
-        onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #005D1F"; }}
+        onFocus={(e) => { e.currentTarget.style.boxShadow = "0 0 0 2px #0073C5"; }}
         onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
         style={{
           display: "flex",
@@ -938,7 +948,7 @@ function ReflectStep({
             fontFamily: "var(--font-brand)",
             fontSize: "14px",
             fontWeight: advancementGoal ? 700 : 400,
-            color: advancementGoal ? "#003512" : "#6E6E6E",
+            color: advancementGoal ? "#003512" : "#595854",
           }}
         >
           Advancement is a goal for me
@@ -965,11 +975,11 @@ function ReflectStep({
             padding: "10px 20px",
             background: "none",
             border: "1px solid #D4D4D3",
-            borderRadius: "6px",
+            borderRadius: "8px",
             fontFamily: "var(--font-brand)",
             fontSize: "13px",
             fontWeight: 400,
-            color: "#6E6E6E",
+            color: "#595854",
             cursor: "pointer",
           }}
         >
@@ -979,13 +989,13 @@ function ReflectStep({
           onClick={onContinue}
           style={{
             padding: "12px 28px",
-            background: "#00E95C",
+            background: "#005D1F",
             border: "none",
-            borderRadius: "6px",
+            borderRadius: "8px",
             fontFamily: "var(--font-brand)",
             fontSize: "14px",
             fontWeight: 700,
-            color: "#003512",
+            color: "#FFFFFF",
             cursor: "pointer",
             transition: "background 0.12s",
           }}
@@ -1037,8 +1047,8 @@ function SummaryStep({
   }
 
   function ratingColor(r: Rating | null): string {
-    if (!r) return "#9FA4AA";
-    if (r === "developing") return "#7A5F00";
+    if (!r) return "#595854";
+    if (r === "developing") return "#262626";
     if (r === "skilled") return "#005D1F";
     return "#003512";
   }
@@ -1077,7 +1087,7 @@ function SummaryStep({
             padding: "10px 22px",
             background: "#005D1F",
             border: "none",
-            borderRadius: "6px",
+            borderRadius: "8px",
             fontFamily: "var(--font-brand)",
             fontSize: "14px",
             fontWeight: 700,
@@ -1093,7 +1103,7 @@ function SummaryStep({
           style={{
             fontFamily: "var(--font-brand)",
             fontSize: "13px",
-            color: "#9FA4AA",
+            color: "#595854",
           }}
         >
           Choose Save as PDF in the print dialog.
@@ -1317,11 +1327,11 @@ function SummaryStep({
             padding: "10px 20px",
             background: "none",
             border: "1px solid #D4D4D3",
-            borderRadius: "6px",
+            borderRadius: "8px",
             fontFamily: "var(--font-brand)",
             fontSize: "13px",
             fontWeight: 400,
-            color: "#6E6E6E",
+            color: "#595854",
             cursor: "pointer",
           }}
         >
@@ -1348,7 +1358,7 @@ function AdvanceDelta({ disciplineId, level }: { disciplineId: string; level: Le
       <div
         style={{
           overflowX: "auto",
-          borderRadius: "6px",
+          borderRadius: "8px",
           border: "1px solid #D4D4D3",
         }}
       >
@@ -1417,8 +1427,8 @@ function AdvanceDelta({ disciplineId, level }: { disciplineId: string; level: Le
           </thead>
           <tbody>
             {allRows.map((row, i) => {
-              const currCell = row.cells[level];
-              const nextCell = row.cells[nextLevel];
+              const currCell = row.cells[level]!;
+              const nextCell = row.cells[nextLevel]!;
               const isShared = row.type === "shared";
               const rowBg = isShared ? "#D6E5DB" : "#F1F5F7";
 
@@ -1446,14 +1456,14 @@ function AdvanceDelta({ disciplineId, level }: { disciplineId: string; level: Le
                       verticalAlign: "top",
                     }}
                   >
-                    <span style={{ fontFamily: "var(--font-brand)", fontSize: "12px", fontWeight: 400, color: "#6E6E6E", lineHeight: 1.5 }}>
+                    <span style={{ fontFamily: "var(--font-brand)", fontSize: "12px", fontWeight: 400, color: "#595854", lineHeight: 1.5 }}>
                       {currCell.text}
                     </span>
                   </td>
                   <td
                     style={{
                       padding: "11px 14px",
-                      background: isShared ? "#C4D9CB" : "#E8EEF1",
+                      background: isShared ? "#D6E5DB" : "#E8EEF1",
                       borderTop: i > 0 ? "1px solid #D4D4D3" : "none",
                       verticalAlign: "top",
                     }}
@@ -1545,7 +1555,7 @@ export function WhereIAmNow({ onNavigate: _onNavigate }: WhereIAmNowProps) {
             fontFamily: "var(--font-brand)",
             fontSize: "16px",
             fontWeight: 400,
-            color: "#6E6E6E",
+            color: "#595854",
             lineHeight: 1.7,
             maxWidth: "580px",
             margin: 0,

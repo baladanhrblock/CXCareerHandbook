@@ -1,6 +1,27 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* BDS color variables */
+  --bds-text-primary: #262626;
+  --bds-text-secondary: #595854;
+  --bds-text-disabled: #9FA4AA;
+  --bds-text-on-dark: #FFFFFF;
+  --bds-green: #005D1F;
+  --bds-green-dark: #003512;
+  --bds-green-medium: #5C9770;
+  --bds-green-light: #D6E5DB;
+  --bds-neon: #00E95C;
+  --bds-sand: #F6F4E9;
+  --bds-sand-medium: #D4D4D3;
+  --bds-bg-primary: #FFFFFF;
+  --bds-bg-secondary: #F8F8F5;
+  --bds-bg-tertiary: #F1F5F7;
+  --bds-gray-light: #E8EEF1;
+  --bds-disabled-bg: #D6DAE0;
+  --bds-focus: #0073C5;
+  --bds-yellow: #F5CC02;
+  --bds-yellow-light: #FDF3C2;
+
   /* Design Career Handbook brand tokens */
   --brand-green: #005D1F;
   --brand-deep-green: #003512;

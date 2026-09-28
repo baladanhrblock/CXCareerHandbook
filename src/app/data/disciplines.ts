@@ -1,4 +1,4 @@
-import type { MatrixRow } from "./sharedCompetencies";
+import type { MatrixRow, Level } from "./sharedCompetencies";
 
 // ─── Discipline definition ────────────────────────────────────────────────────
 
@@ -13,6 +13,8 @@ export interface DisciplineData {
   badge?: string;
   /** Optional note rendered below title/description */
   note?: string;
+  /** When set, only these levels are available for this discipline (handbook chips, compare, assessment). */
+  availableLevels?: Level[];
   uniqueRows: MatrixRow[];
 }
 
@@ -192,8 +194,8 @@ const serviceDesign: DisciplineData = {
         associate: { text: "Learns methods and applies established frameworks.", provenance: "draft" },
         mid: { text: "Independently executes service design methodologies.", provenance: "draft" },
         senior: { text: "Selects appropriate methods for complex problems.", provenance: "draft" },
-        lead: { text: "Shapes methodology across programmes.", provenance: "draft" },
-        principal: { text: "Evolves service design practice for the organisation.", provenance: "draft" },
+        lead: { text: "Shapes methodology across programs.", provenance: "draft" },
+        principal: { text: "Evolves service design practice for the organization.", provenance: "draft" },
       },
     },
     {
@@ -203,10 +205,10 @@ const serviceDesign: DisciplineData = {
       tag: "Service Design craft",
       cells: {
         associate: { text: "Supports research activities.", provenance: "draft" },
-        mid: { text: "Synthesises findings into actionable insights.", provenance: "draft" },
+        mid: { text: "Synthesizes findings into actionable insights.", provenance: "draft" },
         senior: { text: "Identifies patterns and root causes.", provenance: "draft" },
         lead: { text: "Establishes strategic insights that shape direction.", provenance: "draft" },
-        principal: { text: "Creates organisational understanding of emerging opportunities.", provenance: "draft" },
+        principal: { text: "Creates organizational understanding of emerging opportunities.", provenance: "draft" },
       },
     },
     {
@@ -218,8 +220,8 @@ const serviceDesign: DisciplineData = {
         associate: { text: "Supports the creation of service design artifacts using established templates and guidance. Understands the purpose of common artifacts (journey maps, service blueprints, stakeholder maps, ecosystems, workflows) and contributes to their development.", provenance: "draft" },
         mid: { text: "Identifies and independently delivers the appropriate artifact for the problem being addressed. Tailors artifact depth and fidelity to audience needs and ensures outputs clearly communicate insights, opportunities, and recommendations.", provenance: "draft" },
         senior: { text: "Demonstrates strong judgment in determining which artifacts are needed, when they are needed, and when they are not. Connects multiple artifacts into a cohesive narrative that drives alignment, decision-making, and action across teams. Coaches others on artifact selection and application.", provenance: "draft" },
-        lead: { text: "Sets artifact expectations across a programme, ensuring teams choose and sequence deliverables consistently. Uses artifacts to align partners and leaders on direction, and mentors designers on making artifacts drive decisions rather than document work.", provenance: "draft" },
-        principal: { text: "Establishes standards and best practices for service design deliverables across programs and portfolios. Evolves new artifacts and methods when existing approaches are insufficient. Uses artifacts strategically to influence leaders, shape organisational understanding, and drive business outcomes at scale.", provenance: "draft" },
+        lead: { text: "Sets artifact expectations across a program, ensuring teams choose and sequence deliverables consistently. Uses artifacts to align partners and leaders on direction, and mentors designers on making artifacts drive decisions rather than document work.", provenance: "draft" },
+        principal: { text: "Establishes standards and best practices for service design deliverables across programs and portfolios. Evolves new artifacts and methods when existing approaches are insufficient. Uses artifacts strategically to influence leaders, shape organizational understanding, and drive business outcomes at scale.", provenance: "draft" },
       },
     },
     {
@@ -228,11 +230,11 @@ const serviceDesign: DisciplineData = {
       type: "unique",
       tag: "Service Design craft",
       cells: {
-        associate: { text: "Co-facilitates design thinking workshops; practises core exercises (How Might We, affinity mapping, dot voting) with facilitation guidance.", provenance: "draft" },
+        associate: { text: "Co-facilitates design thinking workshops; practices core exercises (How Might We, affinity mapping, dot voting) with facilitation guidance.", provenance: "draft" },
         mid: { text: "Facilitates discrete workshop modules such as problem framing, ideation sprints, or concept selection for small cross-functional groups.", provenance: "draft" },
-        senior: { text: "Designs and leads end-to-end design thinking programmes for complex problems; selects and adapts methods to the context and audience.", provenance: "draft" },
+        senior: { text: "Designs and leads end-to-end design thinking programs for complex problems; selects and adapts methods to the context and audience.", provenance: "draft" },
         lead: { text: "Sets facilitation standards for the team; coaches others to run workshops; embeds design thinking into team rituals and project kick-offs.", provenance: "draft" },
-        principal: { text: "Champions design thinking as an organisational capability; shapes how workshop practice is adopted, scaled, and measured across the org.", provenance: "draft" },
+        principal: { text: "Champions design thinking as an organizational capability; shapes how workshop practice is adopted, scaled, and measured across the org.", provenance: "draft" },
       },
     },
     {
@@ -264,137 +266,12 @@ const serviceDesign: DisciplineData = {
   ],
 };
 
-// ─── Research ─────────────────────────────────────────────────────────────────
-
-const research: DisciplineData = {
-  id: "research",
-  title: "Research",
-  description:
-    "Uncovering what customers need through evidence by planning studies, running them, and turning findings into decisions.",
-  skillChips: [
-    "Qualitative methods",
-    "Quantitative methods",
-    "Usability testing",
-    "Interview moderation",
-    "Survey design",
-    "Concept testing",
-    "Participant recruiting",
-    "Analysis & synthesis",
-    "Research repository",
-    "Behavioural analytics",
-    "Diary & longitudinal studies",
-    "Stakeholder readouts",
-  ],
-  chipsBold: true,
-  uniqueRows: [
-    {
-      id: "research-study-design",
-      label: "Study Design & Methods",
-      type: "unique",
-      tag: "Research craft",
-      cells: {
-        associate: { text: "Runs prescribed studies against a defined protocol; assists with moderation and note-taking.", provenance: "draft" },
-        mid: { text: "Selects appropriate methods for a defined question and designs the study independently.", provenance: "draft" },
-        senior: { text: "Designs mixed-method programmes for complex questions and knows when not to research.", provenance: "draft" },
-        lead: { text: "Sets methodological standards and reviews study quality across the team.", provenance: "draft" },
-        principal: { text: "Defines the org's research approach and brings new methods into practice.", provenance: "draft" },
-      },
-    },
-    {
-      id: "research-synthesis-insight",
-      label: "Synthesis & Insight",
-      type: "unique",
-      tag: "Research craft",
-      cells: {
-        associate: { text: "Organises findings and reports what participants said.", provenance: "draft" },
-        mid: { text: "Analyses data into themes and clear findings tied to the original question.", provenance: "draft" },
-        senior: { text: "Turns findings into insight that changes a product decision, and connects across studies.", provenance: "draft" },
-        lead: { text: "Synthesises across the portfolio to surface patterns no single study shows.", provenance: "draft" },
-        principal: { text: "Shapes how the org understands its customers over time.", provenance: "draft" },
-      },
-    },
-    {
-      id: "research-ops-enablement",
-      label: "Research Operations & Enablement",
-      type: "unique",
-      tag: "Research craft",
-      cells: {
-        associate: { text: "Follows recruiting, consent, and repository practices.", provenance: "draft" },
-        mid: { text: "Runs their own participant operations and keeps the repository usable for others.", provenance: "draft" },
-        senior: { text: "Enables non-researchers to gather evidence responsibly and improves operations for the team.", provenance: "draft" },
-        lead: { text: "Owns research operations and governance for the team, including participant privacy and ethics.", provenance: "draft" },
-        principal: { text: "Builds the org's research infrastructure and democratisation strategy.", provenance: "draft" },
-      },
-    },
-  ],
-};
-
-// ─── Experience Strategy ──────────────────────────────────────────────────────
-
-const experienceStrategy: DisciplineData = {
-  id: "experience-strategy",
-  title: "Experience Strategy",
-  description: "Connecting experience decisions to vision, business outcomes, and the broader portfolio.",
-  skillChips: [
-    "Experience vision",
-    "Narrative framing",
-    "Business & market acumen",
-    "Outcome measurement",
-    "Portfolio prioritization",
-    "Cross-org facilitation",
-  ],
-  chipsBold: true,
-  uniqueRows: [
-    {
-      id: "xs-vision-narrative",
-      label: "Vision & Narrative",
-      type: "unique",
-      tag: "Experience Strategy craft",
-      cells: {
-        associate: { text: "Supports vision artifacts (forward-looking).", provenance: "draft", aspirational: true },
-        mid: { text: "Frames problem narratives (forward-looking).", provenance: "draft", aspirational: true },
-        senior: { text: "Builds compelling experience visions.", provenance: "draft" },
-        lead: { text: "Sets and sells experience vision for a domain.", provenance: "draft" },
-        principal: { text: "Defines long-range experience vision for the org.", provenance: "draft" },
-      },
-    },
-    {
-      id: "xs-business-acumen",
-      label: "Business & Market Acumen",
-      type: "unique",
-      tag: "Experience Strategy craft",
-      cells: {
-        associate: { text: "Learns the business context (forward-looking).", provenance: "draft", aspirational: true },
-        mid: { text: "Connects design to business goals (forward-looking).", provenance: "draft", aspirational: true },
-        senior: { text: "Ties experience decisions to outcomes.", provenance: "draft" },
-        lead: { text: "Aligns experience strategy to business strategy.", provenance: "draft" },
-        principal: { text: "Shapes org strategy with experience insight.", provenance: "draft" },
-      },
-    },
-    {
-      id: "xs-portfolio-measurement",
-      label: "Portfolio Influence & Measurement",
-      type: "unique",
-      tag: "Experience Strategy craft",
-      cells: {
-        associate: { text: "Tracks basic metrics (forward-looking).", provenance: "draft", aspirational: true },
-        mid: { text: "Measures feature outcomes (forward-looking).", provenance: "draft", aspirational: true },
-        senior: { text: "Influences a product area with evidence.", provenance: "draft" },
-        lead: { text: "Drives portfolio-level prioritization.", provenance: "draft" },
-        principal: { text: "Defines how the org measures experience value.", provenance: "draft" },
-      },
-    },
-  ],
-};
-
 // ─── Registry ─────────────────────────────────────────────────────────────────
 
 export const DISCIPLINES: Record<string, DisciplineData> = {
   "ux-design": uxDesign,
-  research: research,
   "content-design": contentDesign,
   "service-design": serviceDesign,
-  "experience-strategy": experienceStrategy,
 };
 
 /** Discipline ids in the order the filter chips are presented. */
@@ -402,8 +279,6 @@ export const DISCIPLINE_ORDER = [
   "ux-design",
   "content-design",
   "service-design",
-  "research",
-  "experience-strategy",
 ] as const;
 
 export type DisciplineId = (typeof DISCIPLINE_ORDER)[number];

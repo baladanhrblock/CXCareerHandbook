@@ -17,7 +17,7 @@ export function PlaceholderScreen({ title, description }: PlaceholderScreenProps
           background: "#D6E5DB",
           color: "#005D1F",
           fontFamily: "var(--font-brand)",
-          fontSize: "11px",
+          fontSize: "12px",
           fontWeight: 700,
           letterSpacing: "0.12em",
           textTransform: "uppercase",
@@ -46,7 +46,7 @@ export function PlaceholderScreen({ title, description }: PlaceholderScreenProps
           fontFamily: "var(--font-brand)",
           fontSize: "16px",
           fontWeight: 400,
-          color: "#6E6E6E",
+          color: "#595854",
           lineHeight: 1.7,
           maxWidth: "560px",
         }}
@@ -70,7 +70,7 @@ export function PlaceholderScreen({ title, description }: PlaceholderScreenProps
           style={{
             fontFamily: "var(--font-brand)",
             fontSize: "14px",
-            color: "#6E6E6E",
+            color: "#595854",
             margin: 0,
           }}
         >

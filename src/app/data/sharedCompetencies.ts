@@ -25,7 +25,7 @@ export interface MatrixRow {
   tag: string;
   /** One-line definition shown under the row label and in the side panel */
   definition?: string;
-  cells: Record<Level, MatrixCell>;
+  cells: Partial<Record<Level, MatrixCell>>;
 }
 
 // ─── Level metadata ───────────────────────────────────────────────────────────
@@ -54,7 +54,7 @@ export const LEVELS: { key: Level; label: string; intent: string }[] = [
   {
     key: "principal",
     label: "Principal",
-    intent: "Shaping direction across the organisation",
+    intent: "Shaping direction across the organization",
   },
 ];
 

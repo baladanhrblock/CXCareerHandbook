@@ -78,11 +78,11 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
             <div
               style={{
                 fontFamily: "var(--font-brand)",
-                fontSize: "11px",
+                fontSize: "12px",
                 fontWeight: 700,
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
-                color: "#9FA4AA",
+                color: "#595854",
                 marginBottom: "4px",
               }}
             >
@@ -105,14 +105,14 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
                   style={{
                     display: "inline-block",
                     background: "#E8EEF1",
-                    color: "#6E6E6E",
+                    color: "#595854",
                     fontFamily: "var(--font-brand)",
-                    fontSize: "10px",
+                    fontSize: "12px",
                     fontWeight: 700,
                     letterSpacing: "0.08em",
                     textTransform: "uppercase",
                     padding: "2px 8px",
-                    borderRadius: "3px",
+                    borderRadius: "4px",
                   }}
                 >
                   Aspirational
@@ -127,7 +127,7 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
               background: "none",
               border: "1px solid transparent",
               cursor: "pointer",
-              color: "#6E6E6E",
+              color: "#595854",
               fontSize: "20px",
               lineHeight: 1,
               padding: "4px 8px",
@@ -135,10 +135,10 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
               flexShrink: 0,
               transition: "border-color 0.12s, color 0.12s",
             }}
-            onFocus={(e) => { e.currentTarget.style.borderColor = "#005D1F"; e.currentTarget.style.color = "#005D1F"; }}
-            onBlur={(e) => { e.currentTarget.style.borderColor = "transparent"; e.currentTarget.style.color = "#6E6E6E"; }}
+            onFocus={(e) => { e.currentTarget.style.borderColor = "#0073C5"; e.currentTarget.style.color = "#005D1F"; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = "transparent"; e.currentTarget.style.color = "#595854"; }}
             onMouseEnter={(e) => { e.currentTarget.style.color = "#005D1F"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "#6E6E6E"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "#595854"; }}
           >
             ×
           </button>
@@ -151,11 +151,11 @@ function SidePanel({ data, onClose }: { data: PanelData; onClose: () => void }) 
                 fontFamily: "var(--font-brand)",
                 fontSize: "13px",
                 fontWeight: 400,
-                color: "#6E6E6E",
+                color: "#595854",
                 lineHeight: 1.6,
                 margin: "0 0 16px",
                 paddingBottom: "16px",
-                borderBottom: "1px solid #E3E3E0",
+                borderBottom: "1px solid #D4D4D3",
               }}
             >
               {data.rowDefinition}
@@ -312,7 +312,7 @@ function SectionHeaderRow({
               textAlign: "left",
               outline: "none",
             }}
-            onFocus={(e) => { e.currentTarget.style.boxShadow = "inset 0 0 0 2px #00E95C"; }}
+            onFocus={(e) => { e.currentTarget.style.boxShadow = "inset 0 0 0 2px #0073C5"; }}
             onBlur={(e) => { e.currentTarget.style.boxShadow = "none"; }}
           >
             <span
@@ -321,7 +321,7 @@ function SectionHeaderRow({
                 display: "inline-block",
                 transform: collapsed ? "rotate(-90deg)" : "rotate(0deg)",
                 transition: "transform 0.15s",
-                fontSize: "9px",
+                fontSize: "12px",
                 lineHeight: 1,
               }}
             >
@@ -356,9 +356,10 @@ function MatrixCell({
   singleLevel?: boolean;
 }) {
   const cell = row.cells[level];
+  if (!cell) return <td colSpan={colSpan} style={{ borderRight: "1px solid #D4D4D3", borderBottom: "1px solid #D4D4D3" }} />;
   const isAspirational = !!cell.aspirational;
 
-  const bg = row.type === "shared" ? "#D6E5DB" : isAspirational ? "#EDF0F4" : "#F1F5F7";
+  const bg = row.type === "shared" ? "#D6E5DB" : isAspirational ? "#F1F5F7" : "#F1F5F7";
 
   return (
     <td
@@ -392,7 +393,7 @@ function MatrixCell({
                 fontFamily: "var(--font-brand)",
                 fontSize: "12px",
                 fontWeight: 400,
-                color: isAspirational ? "#6E6E6E" : "#262626",
+                color: isAspirational ? "#595854" : "#262626",
                 lineHeight: 1.55,
                 marginBottom: "3px",
               }}
@@ -472,7 +473,7 @@ export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels
       <div
         style={{
           overflowX: "auto",
-          borderRadius: "6px",
+          borderRadius: "8px",
           border: "1px solid #D4D4D3",
           maxWidth: isSingleLevel ? "920px" : "100%",
         }}
@@ -501,7 +502,7 @@ export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels
                   borderRight: "1px solid rgba(255,255,255,0.08)",
                   textAlign: "left",
                   fontFamily: "var(--font-brand)",
-                  fontSize: "11px",
+                  fontSize: "12px",
                   fontWeight: 700,
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
@@ -605,9 +606,9 @@ export function CompetencyMatrix({ rows, sections, highlightLevel, visibleLevels
                             <div
                               style={{
                                 fontFamily: "var(--font-brand)",
-                                fontSize: "11px",
+                                fontSize: "12px",
                                 fontWeight: 400,
-                                color: "#6E6E6E",
+                                color: "#595854",
                                 lineHeight: 1.45,
                                 marginTop: "4px",
                               }}

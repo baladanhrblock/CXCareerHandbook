@@ -4,6 +4,9 @@ import { Sidebar } from "./components/Sidebar";
 import { WelcomeScreen } from "./components/WelcomeScreen";
 import { UnifiedHandbook } from "./components/UnifiedHandbook";
 import { WhereIAmNow } from "./components/WhereIAmNow";
+import { HowLevelsWork } from "./components/HowLevelsWork";
+import { CareerPaths } from "./components/CareerPaths";
+import { GrowingYourCareer } from "./components/GrowingYourCareer";
 import { isDisciplineId, type DisciplineId } from "./data/disciplines";
 import type { Level } from "./data/sharedCompetencies";
 import type { RouteKey } from "./components/Sidebar";
@@ -123,6 +126,15 @@ export default function App() {
     if (route === "where-i-am-now") {
       return <WhereIAmNow onNavigate={handleNavigate} />;
     }
+    if (route === "how-levels-work") {
+      return <HowLevelsWork />;
+    }
+    if (route === "career-paths") {
+      return <CareerPaths />;
+    }
+    if (route === "growing-your-career") {
+      return <GrowingYourCareer />;
+    }
     return null;
   }
 
@@ -140,7 +152,7 @@ export default function App() {
         }
         /* Smooth focus ring for all interactive elements */
         *:focus-visible {
-          outline: 2px solid #005D1F;
+          outline: 2px solid #0073C5;
           outline-offset: 2px;
         }
       `}</style>
